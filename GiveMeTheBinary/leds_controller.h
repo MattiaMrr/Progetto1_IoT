@@ -16,5 +16,6 @@ void turnOnRedLed();
 void turnOffRedLed();
 void pulseRedLed();
 void resetBoard();
+void showDifficulty(int difficulty);
 
 #endif // LEDS_CONTROLLER_H

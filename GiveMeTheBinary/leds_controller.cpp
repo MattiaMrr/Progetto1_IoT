@@ -49,3 +49,9 @@ void resetBoard(){
     turnOffGreenLeds();
     turnOffRedLed();
 }
+
+void showDifficulty(int difficulty) {
+    for (int i = 1; i < difficulty; i++) {
+        turnOnLed(ledPins[i]);
+    }
+}

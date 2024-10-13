@@ -3,8 +3,8 @@
 #include "constants.h"
 #include "leds_controller.h"
 #include <avr/sleep.h>
+#include "game_controller.h"
 
-int state;
 const int buttonPins[] = {B1, B2, B3, B4};
 extern const int ledPins[];
 
@@ -13,28 +13,39 @@ void setup() {
   initButtons(buttonPins, BUTTON_COUNT);
   initLeds(ledPins, LED_COUNT);
   Serial.begin(9600);
+
   // Interrupt per il wakeup dallo sleep.
 
   state = STARTUP;
+
+  resetBoard();
 }
 
 void loop() {
   switch (state) {
     case STARTUP:
-      resetBoard();
       pulseRedLed();
+
       //read potentiometer to select difficulty
+      int potentiometerValue = analogRead(POT);
+
+      //map potentiometer value to difficulty level
+      //consider creating a function for this
+      int newDifficulty = map(potentiometerValue, 0, 1023, 1, 4);  // 4 is the maximum difficulty, use constant?
+
       //show selected difficulty with LEDs
-      //after a certain time, change state to DEEP_SLEEP
+      if (newDifficulty != difficulty) {
+        difficulty = newDifficulty;
+        showDifficulty(difficulty);
+      }
       
-      /* serve una variabile che salva il tempo iniziale ogni volta che cambio stato
-        posso fare una funzione per cambiare stato e che salva il tempo iniziale,
-        altrimenti dovrei resettare il timer a mano ogni volta che voglio cambiare stato.
-      static unsigned long startTime = millis();
-      if (millis() - startTime >= 10000) {
+      showDifficulty(difficulty);
+      
+      // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
+      if (millis() - currRoundStartTime >= 10000) {
         state = DEEP_SLEEP;
       }
-      */
+
       break;
     case DEEP_SLEEP:
       Serial.println("DEEP SLEEP");

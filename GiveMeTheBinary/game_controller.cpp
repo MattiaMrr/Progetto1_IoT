@@ -1,11 +1,11 @@
-#include <Arduino.h>
+#include "game_controller.h"
 
-#ifndef GAME_CONTROLLER_H
-#define GAME_CONTROLLER_H
+int state;
+int currRoundStartTime;
+int difficulty;
 
-extern int state;
-extern int currRoundStartTime;
 
-void changeState(int newState);
-
-#endif // GAME_CONTROLLER_H
+void changeState(int newState) {
+  state = newState;
+  currRoundStartTime = millis();
+}
