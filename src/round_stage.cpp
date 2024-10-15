@@ -42,6 +42,7 @@ void round_game(int buttonPins[], int ledPins[]) {
             flag = false;
         }
 
+        //pausa oer evitare debounce
         delay(50);
     }
 }
