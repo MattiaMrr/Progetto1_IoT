@@ -9,6 +9,12 @@ const int ledPins[] = {LS, L1, L2, L3, L4};
 int fadeAmount = DEFAULT_FADE_AMOUNT;
 int currIntensity = START_INTENSITY;
 
+void initLeds() {
+  for (int i = 0; i < LED_COUNT; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+}
+
 void turnOffLed(const int ledPin) {
   digitalWrite(ledPin, LOW);
 }

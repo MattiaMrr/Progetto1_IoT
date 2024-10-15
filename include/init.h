@@ -1,7 +1,10 @@
 #ifndef INIT_H
 #define INIT_H
 
-void initButtons(const int buttonPins[], int size);
-void initLeds(const int ledPins[], int size);
+#include "leds_controller.h"
+#include "buttons_controller.h"
+#include "lcd_manager.h"
+
+void initAll();
 
 #endif // INIT_H

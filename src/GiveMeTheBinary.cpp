@@ -4,34 +4,36 @@
 #include "leds_controller.h"
 #include <avr/sleep.h>
 #include "game_controller.h"
+#include "potentiometer_controller.h"
 
 const int buttonPins[] = {B1, B2, B3, B4};
 extern const int ledPins[];
 
 void setup() {
-  // Inizializza i bottoni e i LED usando le funzioni
-  initButtons(buttonPins, BUTTON_COUNT);
-  initLeds(ledPins, LED_COUNT);
+  // Inizializza bottoni, LED e display.
+  initAll();
+
+  // Inizializza il serial monitor.
   Serial.begin(9600);
 
   // Interrupt per il wakeup dallo sleep.
+  // ...
 
-  state = STARTUP;
+  // Imposta lo stato iniziale.
+  changeState(STARTUP);
 
+  // Resetta i led.
   resetBoard();
 }
 
 void loop() {
   switch (state) {
     case STARTUP:
+      // Pulsa il led rosso.
       pulseRedLed();
 
-      //read potentiometer to select difficulty
-      int potentiometerValue = analogRead(POT);
-
-      //map potentiometer value to difficulty level
-      //consider creating a function for this
-      int newDifficulty = map(potentiometerValue, 0, 1023, 1, 4);  // 4 is the maximum difficulty, use constant?
+      // Read diffuculty from potentiometer.
+      int newDifficulty = readDifficulty();
 
       //show selected difficulty with LEDs
       if (newDifficulty != difficulty) {
@@ -39,12 +41,13 @@ void loop() {
         showDifficulty(difficulty);
       }
       
-      showDifficulty(difficulty);
-      
       // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
       if (millis() - currRoundStartTime >= 10000) {
-        state = DEEP_SLEEP;
+        changeState(DEEP_SLEEP);
       }
+
+      // Check if the user pressed the button.
+      // ...
 
       break;
     case DEEP_SLEEP:
@@ -59,35 +62,51 @@ void loop() {
       Serial.println("WAKE UP");
 
       /* First thing to do is disable sleep. Then set state to STARTUP. */
-      sleep_disable(); 
-      state = STARTUP;
+      sleep_disable();
+      changeState(STARTUP);
       break;
     case PREPARE_ROUND:
       // Codice per lo stato PREPARE_ROUND
       // Scrivere GO sul display LCD.
+      writeOnLCD("GO");
       Serial.println("GO");
+
       // Volendo un animazione con i LED.
+      //...
+
       delay(2000);
+      if (millis() - currRoundStartTime >= 2000) {
+        changeState(ROUND);
+      }
       break;
     case ROUND:
       // Codice per lo stato ROUND.
 
-      // genera il numero random.
-
+      // Genera un numero random.
+      generateRandomNumber();
 
       // scrivi il numero sul display LCD.
+      // ...
 
+      // Controlla input utente sui bottoni.
+      // ...
 
       // dopo un certo tempo controlla se l'utente ha scritto corretto.
-      delay(10000);
-      //checkNumber();
-
+      // Aspetta un tot di tempo, TODO: calcolare il tmepo in base alla difficoltà e al round.
+      
+      // checkWin();
+      // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
+      if (millis() - currRoundStartTime >= 10000) {
+        changeState(GAME_OVER);
+      }
+      
       break;
     case ROUND_WIN:
       // Codice per lo stato ROUND_WIN
-
+      
       // Scrivere WIN sul display LCD.
       Serial.println("WIN");
+      writeOnLCD("WIN");
 
       // Aspetta 2 secondi.
       delay(2000);
@@ -96,7 +115,10 @@ void loop() {
       //...
 
       // cambia stato a ROUND. usare una funziona apposta.
-      state = ROUND;
+      changeState(ROUND);
+
+      // riduce il tempo a disposizione per il round.
+
       break;
     case GAME_OVER:
       // Codice per lo stato GAME_OVER

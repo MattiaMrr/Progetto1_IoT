@@ -8,13 +8,12 @@ void round_game(int buttonPins[], int ledPins[]) {
     int random_number = rand() % 16; 
 
     bool flag = true;
-    bool ledState[4] = {LOW, LOW, LOW, LOW}; 
+    bool ledState[4] = {LOW, LOW, LOW, LOW};
     bool lastButtonState[4] = {HIGH, HIGH, HIGH, HIGH};
 
     Serial.print("Numero casuale generato: ");
     Serial.println(random_number);
 
-    while (flag == true) {
         userNumber = 0; 
 
         //controlla stato bottoni
@@ -37,12 +36,7 @@ void round_game(int buttonPins[], int ledPins[]) {
             }
         }
 
-        //controllo se il giocatore ha vinto
-        if (userNumber == random_number) {
-            flag = false;
-        }
-
         //pausa oer evitare debounce
         delay(50);
-    }
+    
 }

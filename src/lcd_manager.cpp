@@ -2,11 +2,15 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 
-LiquidCrystal_I2C lcd(0x27, 16, 2); 
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-void go_message() {
-lcd.init();
-lcd.backlight();
-lcd.print("Let's go");
+void initDisplay() {
+  lcd.init();
+  lcd.backlight();
+  lcd.clear();
+}
+
+void writeOnLCD(const char* message) {
+    lcd.print(message);
 }
 

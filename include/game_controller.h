@@ -6,7 +6,10 @@
 extern int state;
 extern int currRoundStartTime;
 extern int difficulty;
+extern int random_number;
 
 void changeState(int newState);
+int generateRandomNumber();
+bool checkWin();
 
 #endif // GAME_CONTROLLER_H

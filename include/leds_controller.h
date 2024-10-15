@@ -8,6 +8,7 @@
 
 extern const int ledPins[];
 
+void initLeds();
 void turnOffLed(const int ledPin);
 void turnOnLed(const int ledPin);
 void turnOnGreenLeds();
@@ -17,5 +18,8 @@ void turnOffRedLed();
 void pulseRedLed();
 void resetBoard();
 void showDifficulty(int difficulty);
+int readLedNumer();
+
+// getLedState(int led_pin);
 
 #endif // LEDS_CONTROLLER_H
