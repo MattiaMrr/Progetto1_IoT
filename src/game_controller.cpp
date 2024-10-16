@@ -6,6 +6,8 @@
 int state;
 int currRoundStartTime;
 int difficulty = 1;
+int ledState[BUTTON_COUNT];
+int lastButtonState[BUTTON_COUNT];
 
 void changeState(int newState)
 {

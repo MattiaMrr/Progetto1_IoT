@@ -33,13 +33,16 @@ void loop() {
       pulseRedLed();
 
       // Read diffuculty from potentiometer.
-      int newDifficulty = readDifficulty();
+     // int newDifficulty = readDifficulty();
 
       //show selected difficulty with LEDs
+      /*
       if (newDifficulty != difficulty) {
         difficulty = newDifficulty;
         showDifficulty(difficulty);
       }
+      */
+      
       
       // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
       if (millis() - currRoundStartTime >= 10000) {
@@ -90,7 +93,7 @@ void loop() {
       //writeOnLCD();
 
       // Controlla input utente sui bottoni.
-      user_num = checkButton();
+      user_num = checkButton(user_num);
 
       // dopo un certo tempo controlla se l'utente ha scritto corretto.
       checkWin(user_num, rand_num);

@@ -4,10 +4,9 @@
 #include "constants.h"
 
 extern const int buttonPins[];
-extern int lastButtonState[BUTTON_COUNT];
 
 // Inizializza i bottoni
-void initButtons();
+
 
 // Gestisce la pressione dei bottoni, chiamata dagli interrupt.
 // ...

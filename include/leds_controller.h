@@ -7,7 +7,7 @@
 #define START_INTENSITY 0
 
 extern const int ledPins[];
-extern int ledState[BUTTON_COUNT];
+
 
 void initLeds();
 void turnOffLed(const int ledPin);
@@ -19,7 +19,6 @@ void turnOffRedLed();
 void pulseRedLed();
 void resetBoard();
 void showDifficulty(int difficulty);
-int readLedNumer();
 
 // getLedState(int led_pin);
 
