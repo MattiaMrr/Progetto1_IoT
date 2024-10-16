@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 const int buttonPins[BUTTON_COUNT] = {B1, B2, B3, B4};
+bool lastButtonState[4] = {HIGH, HIGH, HIGH, HIGH};
 
 
 void initButtons() {

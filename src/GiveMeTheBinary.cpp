@@ -69,7 +69,6 @@ void loop() {
       // Codice per lo stato PREPARE_ROUND
       // Scrivere GO sul display LCD.
       writeOnLCD("GO");
-      Serial.println("GO");
 
       // Volendo un animazione con i LED.
       //...
@@ -80,18 +79,22 @@ void loop() {
       }
       break;
     case ROUND:
+    int rand_num;
+    int user_num;
       // Codice per lo stato ROUND.
 
       // Genera un numero random.
-      generateRandomNumber();
+      rand_num = generateRandomNumber();
 
       // scrivi il numero sul display LCD.
-      // ...
+      //writeOnLCD();
 
       // Controlla input utente sui bottoni.
-      // ...
+      user_num = checkButton();
 
       // dopo un certo tempo controlla se l'utente ha scritto corretto.
+      checkWin(user_num, rand_num);
+     
       // Aspetta un tot di tempo, TODO: calcolare il tmepo in base alla difficoltà e al round.
       
       // checkWin();

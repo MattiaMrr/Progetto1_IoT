@@ -4,6 +4,7 @@
 #include "constants.h"
 
 extern const int buttonPins[];
+int lastButtonState[BUTTON_COUNT];
 
 // Inizializza i bottoni
 void initButtons();
