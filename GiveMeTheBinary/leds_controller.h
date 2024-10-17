@@ -6,7 +6,7 @@
 #define DEFAULT_FADE_AMOUNT 5
 #define START_INTENSITY 0
 
-extern const int LED_PINS[];
+extern const int LED_PINS[LED_COUNT];
 extern bool ledState[LED_COUNT];
 
 void initLeds();

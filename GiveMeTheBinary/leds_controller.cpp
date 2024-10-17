@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 // Definisci gli array per i bottoni e i LED
-const int LED_PINS[] = {L1, L2, L3, L4};
+const int LED_PINS[LED_COUNT] = {L1, L2, L3, L4};
 bool ledState[LED_COUNT];
 
 // const int ledStates[LED_COUNT];
@@ -20,15 +20,22 @@ void initLeds() {
 
 void turnOffLed(const int ledIndex) {
   digitalWrite(LED_PINS[ledIndex], LOW);
-
+  Serial.print("OFF PIN ");
+  Serial.print(LED_PINS[ledIndex]);
+  Serial.print(" INDEX ");
+  Serial.println(ledIndex);
 }
 
 void turnOnLed(const int ledIndex) {
   digitalWrite(LED_PINS[ledIndex], HIGH);
+  Serial.print("ON PIN ");
+  Serial.print(LED_PINS[ledIndex]);
+  Serial.print(" INDEX ");
+  Serial.println(ledIndex);
 }
 
 void turnOnGreenLeds() {
-    for (int i = 1; i < LED_COUNT; i++) {
+    for (int i = 0; i < LED_COUNT; i++) {
         turnOnLed(i);
     }
 }
@@ -41,13 +48,17 @@ void turnOffGreenLeds() {
 
 void turnOnRedLed() {
     digitalWrite(LS, HIGH);
+    Serial.println("RED ON");
 }
 
 void turnOffRedLed() {
     digitalWrite(LS, LOW);
+    Serial.println("RED OFF");
 }
 
 void pulseRedLed() {
+    Serial.print("RED INT ");
+    Serial.println(currIntensity);
     analogWrite(LS, currIntensity);
     currIntensity += fadeAmount;
     if (currIntensity == 0 || currIntensity == 255) {
@@ -61,8 +72,9 @@ void resetBoard(){
 }
 
 void showDifficulty(int difficulty) {
-    for (int i = 1; i < difficulty; i++) {
-        turnOnLed(LED_PINS[i]);
+    resetBoard();
+    for (int i = 0; i < difficulty; i++) {
+        turnOnLed(i);
     }
 }
 
@@ -74,5 +86,6 @@ int readLedStatesAsInt() {
       ledValue |= (1 << i);  // Imposta il bit corrispondente a 1 se il LED è acceso
     }
   }
+  Serial.println("NUM: " + ledValue);
   return ledValue;  // Restituisce il valore intero rappresentante lo stato dei LED
 }

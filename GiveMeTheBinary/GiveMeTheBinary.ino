@@ -26,14 +26,16 @@ void setup() {
 
 
 void loop() {
-  int newDifficulty;
   switch (state) {
     case STARTUP:
+      int newDifficulty;
       // Pulsa il led rosso.
       pulseRedLed();
 
       // Read diffuculty from potentiometer.
       newDifficulty = readDifficulty();
+      Serial.print("DIFFICULTY ");
+      Serial.println(newDifficulty);
 
       //show selected difficulty with LEDs
       if (newDifficulty != difficulty) {
