@@ -6,31 +6,34 @@
 #include "game_controller.h"
 #include "potentiometer_controller.h"
 
-const int buttonPins[] = {B1, B2, B3, B4};
-extern const int ledPins[];
+ int buttonPins[] = {B1, B2, B3, B4};
+ int ledPins[] = {L1, L2, L3, L4, LS};
+ int rand_num = 0;
+    int user_num;
 
 void setup() {
   // Inizializza bottoni, LED e display.
-  initAll();
+  initAll(ledPins, buttonPins);
 
   // Inizializza il serial monitor.
   Serial.begin(9600);
 
   // Interrupt per il wakeup dallo sleep.
   // ...
-
+  
   // Imposta lo stato iniziale.
   changeState(STARTUP);
 
   // Resetta i led.
-  resetBoard();
+  resetBoard(ledPins);
 }
 
 void loop() {
   switch (state) {
+    
     case STARTUP:
       // Pulsa il led rosso.
-      pulseRedLed();
+     // pulseRedLed();
 
       // Read diffuculty from potentiometer.
      // int newDifficulty = readDifficulty();
@@ -43,15 +46,18 @@ void loop() {
       }
       */
       
-      
+      rand_num = generateRandomNumber();
       // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
+      /*
       if (millis() - currRoundStartTime >= 10000) {
         changeState(DEEP_SLEEP);
       }
+      */
+      
 
       // Check if the user pressed the button.
       // ...
-
+  state = ROUND;
       break;
     case DEEP_SLEEP:
       Serial.println("DEEP SLEEP");
@@ -82,18 +88,15 @@ void loop() {
       }
       break;
     case ROUND:
-    int rand_num;
-    int user_num;
       // Codice per lo stato ROUND.
 
       // Genera un numero random.
-      rand_num = generateRandomNumber();
-
+      
       // scrivi il numero sul display LCD.
       //writeOnLCD();
 
       // Controlla input utente sui bottoni.
-      user_num = checkButton(user_num);
+      user_num = checkButton(user_num, ledPins, rand_num);
 
       // dopo un certo tempo controlla se l'utente ha scritto corretto.
       checkWin(user_num, rand_num);
@@ -102,9 +105,11 @@ void loop() {
       
       // checkWin();
       // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
-      if (millis() - currRoundStartTime >= 10000) {
+      
+       if (millis() - currRoundStartTime >= 10000) {
         changeState(GAME_OVER);
       }
+     
       
       break;
     case ROUND_WIN:

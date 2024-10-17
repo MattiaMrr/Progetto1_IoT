@@ -5,6 +5,6 @@
 #include "buttons_controller.h"
 #include "lcd_manager.h"
 
-void initAll();
+void initAll(int ledPins[], int buttonPins[]);
 
 #endif // INIT_H

@@ -3,12 +3,9 @@
 
 #include "constants.h"
 
-extern const int buttonPins[];
-
 // Inizializza i bottoni
-
-
-// Gestisce la pressione dei bottoni, chiamata dagli interrupt.
+void buttonsInit(int buttonPins[]);
+// Gestisce la pressione dei bottoni
 // ...
 
 // Toglie il bounce dei bottoni.
