@@ -1,7 +1,7 @@
-#include <Arduino.h>
-
 #ifndef GAME_CONTROLLER_H
 #define GAME_CONTROLLER_H
+
+#include <Arduino.h>
 
 extern int state;
 extern int currRoundStartTime;

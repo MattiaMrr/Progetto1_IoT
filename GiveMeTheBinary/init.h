@@ -6,5 +6,8 @@
 #include "lcd_manager.h"
 
 void initAll();
+void wakeUp();
+void enableWakeUpInterrupts();
+void disableWakeUpInterrupts();
 
 #endif // INIT_H

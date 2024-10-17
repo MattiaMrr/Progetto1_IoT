@@ -3,7 +3,7 @@
 
 #include "constants.h"
 
-extern const int BTN_PINS[];
+extern const int BTN_PINS[BUTTON_COUNT];
 extern bool lastButtonState[BUTTON_COUNT];
 
 // Inizializza i bottoni

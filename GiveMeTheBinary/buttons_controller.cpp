@@ -1,7 +1,6 @@
-#ifndef BUTTONS_CONTROLLER_H
-#define BUTTONS_CONTROLLER_H
 #include "constants.h"
 #include "leds_controller.h"
+#include "buttons_controller.h"
 #include <Arduino.h>
 
 const int BTN_PINS[BUTTON_COUNT] = {BTN1, BTN2, BTN3, BTN4};
@@ -33,5 +32,3 @@ void readButtons() {
     }
   }
 }
-
-#endif // BUTTONS_CONTROLLER_H

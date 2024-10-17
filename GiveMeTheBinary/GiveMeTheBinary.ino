@@ -2,9 +2,10 @@
 #include "init.h"
 #include "constants.h"
 #include "leds_controller.h"
-#include <avr/sleep.h>
 #include "game_controller.h"
 #include "potentiometer_controller.h"
+
+#include <avr/sleep.h>
 
 extern const int BTN_PINS[];
 extern const int LED_PINS[];
@@ -16,15 +17,13 @@ void setup() {
   // Inizializza il serial monitor.
   Serial.begin(9600);
 
-  // Interrupt per il wakeup dallo sleep.
-  // ...
-
   // Imposta lo stato iniziale.
   changeState(STARTUP);
 
   // Resetta i led.
   resetBoard();
 }
+
 
 void loop() {
   int newDifficulty;
@@ -55,6 +54,9 @@ void loop() {
       Serial.println("DEEP SLEEP");
       // forse devo spegnere tutte le luci non so se lo fa da solo.
 
+      // Enable wakeup interrupts on all buttons.
+      enableWakeUpInterrupts();
+
       set_sleep_mode(SLEEP_MODE_PWR_DOWN);
       sleep_enable();
       sleep_mode();
@@ -64,6 +66,11 @@ void loop() {
 
       /* First thing to do is disable sleep. Then set state to STARTUP. */
       sleep_disable();
+
+      // Disable wakeup interrupts on all button pins.
+      disableWakeUpInterrupts();
+
+      // Change state back to STARTUP.
       changeState(STARTUP);
       break;
     case PREPARE_ROUND:
