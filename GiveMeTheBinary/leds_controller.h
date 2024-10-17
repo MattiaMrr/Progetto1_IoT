@@ -6,8 +6,8 @@
 #define DEFAULT_FADE_AMOUNT 5
 #define START_INTENSITY 0
 
-extern const int ledPins[];
-extern int ledState[BUTTON_COUNT];
+extern const int LED_PINS[];
+extern bool ledState[LED_COUNT];
 
 void initLeds();
 void turnOffLed(const int ledPin);
@@ -20,6 +20,7 @@ void pulseRedLed();
 void resetBoard();
 void showDifficulty(int difficulty);
 int readLedNumer();
+int readLedStatesAsInt();
 
 // getLedState(int led_pin);
 

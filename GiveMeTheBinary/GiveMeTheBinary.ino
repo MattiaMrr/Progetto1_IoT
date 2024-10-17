@@ -6,8 +6,8 @@
 #include "game_controller.h"
 #include "potentiometer_controller.h"
 
-const int buttonPins[] = {B1, B2, B3, B4};
-extern const int ledPins[];
+extern const int BTN_PINS[];
+extern const int LED_PINS[];
 
 void setup() {
   // Inizializza bottoni, LED e display.
@@ -27,13 +27,14 @@ void setup() {
 }
 
 void loop() {
+  int newDifficulty;
   switch (state) {
     case STARTUP:
       // Pulsa il led rosso.
       pulseRedLed();
 
       // Read diffuculty from potentiometer.
-      int newDifficulty = readDifficulty();
+      newDifficulty = readDifficulty();
 
       //show selected difficulty with LEDs
       if (newDifficulty != difficulty) {
@@ -66,6 +67,7 @@ void loop() {
       changeState(STARTUP);
       break;
     case PREPARE_ROUND:
+      int rand_num;
       // Codice per lo stato PREPARE_ROUND
       // Scrivere GO sul display LCD.
       writeOnLCD("GO");
@@ -75,32 +77,26 @@ void loop() {
 
       delay(2000);
       if (millis() - currRoundStartTime >= 2000) {
+        // Genera un numero random.
+        rand_num = generateRandomNumber();
+
+        // scrivi il numero sul display LCD.
+        writeOnLCD("" + rand_num);
+
+        // Cambia stato
         changeState(ROUND);
       }
       break;
     case ROUND:
-    int rand_num;
-    int user_num;
       // Codice per lo stato ROUND.
 
-      // Genera un numero random.
-      rand_num = generateRandomNumber();
-
-      // scrivi il numero sul display LCD.
-      //writeOnLCD();
-
       // Controlla input utente sui bottoni.
-      user_num = checkButton();
+      readButtons();
 
-      // dopo un certo tempo controlla se l'utente ha scritto corretto.
-      checkWin(user_num, rand_num);
-     
       // Aspetta un tot di tempo, TODO: calcolare il tmepo in base alla difficoltà e al round.
-      
-      // checkWin();
       // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
       if (millis() - currRoundStartTime >= 10000) {
-        changeState(GAME_OVER);
+        changeState(checkWin(readLedStatesAsInt()) ? ROUND_WIN : GAME_OVER);
       }
       
       break;

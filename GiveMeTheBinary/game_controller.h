@@ -10,6 +10,6 @@ extern int random_number;
 
 void changeState(int newState);
 int generateRandomNumber();
-void checkWin(int user_num, int rand_num);
+bool checkWin(int user_num);
 int checkButton();
 #endif // GAME_CONTROLLER_H

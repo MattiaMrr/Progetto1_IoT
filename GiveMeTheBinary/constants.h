@@ -2,10 +2,10 @@
 #define CONSTANTS_H
 
 // Definisci le costanti per i pin dei bottoni
-#define B1 5
-#define B2 4
-#define B3 3
-#define B4 2
+#define BTN1 5
+#define BTN2 4
+#define BTN3 3
+#define BTN4 2
 
 // Definisci le costanti per i pin dei LED
 #define LS 6    // PWM pin
@@ -26,6 +26,8 @@
 
 // Definisci le dimensioni degli array
 #define BUTTON_COUNT 4
-#define LED_COUNT 5
+#define LED_COUNT 4
+
+#define DEBOUNCE_TIME 50
 
 #endif // CONSTANTS_H

@@ -3,11 +3,13 @@
 
 #include "constants.h"
 
-extern const int buttonPins[];
-extern int lastButtonState[BUTTON_COUNT];
+extern const int BTN_PINS[];
+extern bool lastButtonState[BUTTON_COUNT];
 
 // Inizializza i bottoni
 void initButtons();
+
+void readButtons();
 
 // Gestisce la pressione dei bottoni, chiamata dagli interrupt.
 // ...

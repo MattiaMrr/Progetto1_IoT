@@ -6,6 +6,7 @@
 int state;
 int currRoundStartTime;
 int difficulty = 1;
+int randomNum;
 
 void changeState(int newState)
 {
@@ -14,48 +15,46 @@ void changeState(int newState)
 }
 
 // funzione per controllare se il round e' stato vinto
-void checkWin(int userNumber, int randomNumber)
+bool checkWin(int guess)
 {
-  if (userNumber == randomNumber)
-  {
-    changeState(ROUND_WIN);
-  }
+  return guess == randomNum;
 }
 
 // funzione per generare un numero random.
 int generateRandomNumber()
 {
   randomSeed(micros());
-  int random_number = rand() % 16;
-  return random_number;
+  randomNum = rand() % 16;
+  return randomNum;
 }
 
-int checkButton(int userNumber)
+int checkButton()
 {
-  for (int i = 0; i < BUTTON_COUNT; i++)
-  {
-    int currentButtonState = digitalRead(buttonPins[i]);
+  // for (int i = 0; i < BUTTON_COUNT; i++)
+  // {
+  //   int currentButtonState = digitalRead(BTN_PINS[i]);
 
-    // transizione da HIGH a LOW e viceversa dei led
-    if (currentButtonState == LOW && lastButtonState[i] == HIGH)
-    {
-      turnOnGreenLeds();
-      digitalWrite(ledPins[i], ledState[i]);
-    }
+  //   // transizione da HIGH a LOW e viceversa dei led
+  //   if (currentButtonState == LOW && lastButtonState[i] == HIGH)
+  //   {
+  //     turnOnGreenLeds();
+  //     digitalWrite(LED_PINS[i], ledState[i]);
+  //   }
 
-    // aggiorna ultimo stato del bottone
-    lastButtonState[i] = currentButtonState;
-  }
+  //   // aggiorna ultimo stato del bottone
+  //   lastButtonState[i] = currentButtonState;
+  // }
 
-  for (int i = 0; i < 4; i++)
-  {
-    if (ledState[i] == HIGH)
-    {
-      userNumber |= (1 << i);
-    }
-  }
+  // for (int i = 0; i < 4; i++)
+  // {
+  //   if (ledState[i] == HIGH)
+  //   {
+  //     userNumber |= (1 << i);
+  //   }
+  // }
   
-  delay(50);
+  // delay(50);
 
-  return userNumber;
+  // return userNumber;
+  return 0;
 }
