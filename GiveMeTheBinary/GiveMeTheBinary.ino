@@ -10,7 +10,7 @@
 extern const int BTN_PINS[];
 extern const int LED_PINS[];
 
-int factor;
+double factor;
 double roundTime = ROUND_TIME;
 int score = 0;
 
@@ -86,9 +86,13 @@ void loop() {
       if (millis() - currRoundStartTime >= 2000) {
         // Genera un numero random.
         rand_num = generateRandomNumber();
+        Serial.print("gen num:");
+        Serial.println(rand_num);
 
+        char buffer[10]; 
+        itoa(rand_num, buffer, 10); // Converte rand_num in stringa in base 10
         // scrivi il numero sul display LCD.
-        writeOnLCD("" + rand_num, "");
+        writeOnLCD(buffer, "");
 
         // Cambia stato
         changeState(ROUND);
@@ -100,6 +104,9 @@ void loop() {
       // Controlla input utente sui bottoni.
       readButtons();
 
+      Serial.print("time in round: ");
+      Serial.println(millis() - currRoundStartTime);
+
       // Aspetta un tot di tempo, TODO: calcolare il tmepo in base alla difficoltà e al round.
       // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
       if (millis() - currRoundStartTime >= roundTime) {
@@ -108,33 +115,38 @@ void loop() {
       
       break;
     case ROUND_WIN:
-      // Codice per lo stato ROUND_WIN
-
-      // Increase score.
+      // Incrementa il punteggio
       score++;
       
-      // Scrivere WIN sul display LCD.
-      Serial.print("GOOD! Score: ");
-      Serial.println(score);
-      writeOnLCD("GOOD!",  "Score: " + score);
+      // Converte il punteggio in stringa
+      char buffer[10]; 
+      itoa(score, buffer, 10); // Converte score in stringa in base 10
+      
+      // Combina la stringa "Score: " con il punteggio
+      char message[20]; // Assicurati che il buffer sia abbastanza grande
+      sprintf(message, "Score: %s", buffer); // Combina la stringa "Score: " con il contenuto di buffer
+
+      // Scrive GOOD! e il punteggio sul display
+      writeOnLCD("GOOD!", message);
 
       delay(2000);
 
-      // Se sono passati 2 secondi genera un nuovo random e lo mostra
-      // Genera un numero random.
+      // Genera un nuovo numero casuale
       rand_num = generateRandomNumber();
 
-      // Reduce time available time for next round.
+      // Riduci il tempo disponibile per il prossimo round
       roundTime = roundTime * factor;
+      Serial.print("new roundtime: ");
+      Serial.println(roundTime);
 
-      // scrivi il numero sul display LCD.
-      writeOnLCD("Number: " + rand_num, "");
+      // Converte il numero casuale in stringa
+      itoa(rand_num, buffer, 10); // Converte rand_num in stringa in base 10
+      
+      // Scrivi il numero sul display LCD
+      writeOnLCD("Number: ", buffer);
 
       // Cambia stato
       changeState(ROUND);
-
-      // Magari un animazione con i LED.
-      //...
       break;
     case GAME_OVER:
       // Codice per lo stato GAME_OVER

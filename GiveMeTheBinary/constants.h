@@ -30,7 +30,7 @@
 
 #define DEBOUNCE_TIME 50
 
-#define ROUND_TIME 10.000 // Default time for the round in milliseconds.
+#define ROUND_TIME 10000 // Default time for the round in milliseconds.
 
 
 #endif // CONSTANTS_H

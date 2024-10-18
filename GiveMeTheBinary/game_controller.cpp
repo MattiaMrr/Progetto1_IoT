@@ -5,14 +5,15 @@
 #include "constants.h"
 
 int state;
-int currRoundStartTime;
+unsigned long currRoundStartTime;
 int difficulty = 0;
 int F = 1;
 int randomNum;
 
 void changeState(int newState)
 {
-  Serial.println("SIOCA");
+  Serial.print("Stato: ");
+  Serial.println(newState);
   resetBoard();
   state = newState;
   currRoundStartTime = millis();

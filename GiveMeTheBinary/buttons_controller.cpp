@@ -25,7 +25,7 @@ void readButtons() {
     if (btnState == HIGH) {
       // Controlla se è passato abbastanza tempo dal precedente stato stabile
       if (currTime - btnTimers[i] >= DEBOUNCE_TIME) {
-        turnOnLed(LED_PINS[i]);  // Accendi il LED corrispondente
+        turnOnLed(i);  // Accendi il LED corrispondente
         // Resetta il timer.
         btnTimers[i] = currTime;
       }

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 extern int state;
-extern int currRoundStartTime;
+extern unsigned long currRoundStartTime;
 extern int difficulty;
 extern int random_number;
 

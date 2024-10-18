@@ -20,6 +20,7 @@ void initLeds() {
 
 void turnOffLed(const int ledIndex) {
   digitalWrite(LED_PINS[ledIndex], LOW);
+  ledState[ledIndex] = false;
   Serial.print("OFF PIN ");
   Serial.print(LED_PINS[ledIndex]);
   Serial.print(" INDEX ");
@@ -28,6 +29,7 @@ void turnOffLed(const int ledIndex) {
 
 void turnOnLed(const int ledIndex) {
   digitalWrite(LED_PINS[ledIndex], HIGH);
+  ledState[ledIndex] = true;
   Serial.print("ON PIN ");
   Serial.print(LED_PINS[ledIndex]);
   Serial.print(" INDEX ");
@@ -81,11 +83,12 @@ void showDifficulty(int difficulty) {
 // Funzione per leggere lo stato dei LED e convertirlo in un numero intero
 int readLedStatesAsInt() {
   int ledValue = 0;
-  for (int i = 0; i < LED_COUNT; i++) {
-    if (ledState[i]) {
-      ledValue |= (1 << i);  // Imposta il bit corrispondente a 1 se il LED è acceso
+  for (int i = 0; i < LED_COUNT; i++) { // Ciclo normale
+    if (ledState[LED_COUNT - 1 - i]) { // Leggi dallo stato dei LED partendo dall'ultimo
+      ledValue |= (1 << i); // Imposta il bit corrispondente a 1 se il LED è acceso
     }
   }
-  Serial.println("NUM: " + ledValue);
-  return ledValue;  // Restituisce il valore intero rappresentante lo stato dei LED
+  Serial.print("NUM: ");
+  Serial.println(ledValue);
+  return ledValue; // Restituisce il valore intero rappresentante lo stato dei LED
 }
