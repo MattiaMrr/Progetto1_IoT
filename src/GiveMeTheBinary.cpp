@@ -6,7 +6,7 @@
 #include "game_controller.h"
 #include "potentiometer_controller.h"
 
-int buttonPins[] = {B1, B2, B3, B4};
+int buttonPins[] = {BTN1, BTN2, BTN3, BTN4};
 int ledPins[] = {L1, L2, L3, L4, LS};
 int rand_num = 0;
 int user_num;
@@ -17,8 +17,8 @@ void setup() {
 
   // Inizializza il serial monitor.
   Serial.begin(9600);
-  attachInterrupt(digitalPinToInterrupt(B1), wakeUpNow, FALLING);
-  attachInterrupt(digitalPinToInterrupt(B2), switchToRound, FALLING);
+  attachInterrupt(digitalPinToInterrupt(BTN1), wakeUpNow, FALLING);
+  attachInterrupt(digitalPinToInterrupt(BTN2), switchToRound, FALLING);
 
   // Resetta i led.
   resetBoard(ledPins);
