@@ -12,6 +12,7 @@ extern const int LED_PINS[];
 
 int factor;
 double roundTime = ROUND_TIME;
+int score = 0;
 
 void setup() {
   // Inizializza bottoni, LED e display.
@@ -128,6 +129,12 @@ void loop() {
         // Genera un numero random.
         rand_num = generateRandomNumber();
 
+        // Increase score. TODO: non va qui perchè lo devo mostrare nel led nelle istruzioni sopra.
+        score++;
+
+        // Reduce time available time for next round.
+        roundTime = roundTime * factor;
+
         // scrivi il numero sul display LCD.
         writeOnLCD("" + rand_num);
 
@@ -136,15 +143,6 @@ void loop() {
       }
 
       // Magari un animazione con i LED.
-      //...
-
-      // Reduce time available time for next round.
-      roundTime = roundTime * factor;
-
-      // cambia stato a ROUND. usare una funziona apposta.
-      changeState(ROUND);
-
-      // riduce il tempo a disposizione per il round.
       //...
       break;
     case GAME_OVER:
