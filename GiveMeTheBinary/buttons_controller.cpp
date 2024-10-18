@@ -32,3 +32,15 @@ void readButtons() {
     }
   }
 }
+
+bool readButton(const int index){
+  unsigned long currTime = millis();  // Leggi il tempo corrente
+  static unsigned long lastPress = millis();
+  if (currTime - lastPress >= DEBOUNCE_TIME) {
+    return digitalRead(BTN_PINS[index]);
+    lastPress = currTime;
+  } else {
+    return false;
+  }
+  
+}

@@ -10,6 +10,9 @@
 extern const int BTN_PINS[];
 extern const int LED_PINS[];
 
+int factor;
+double roundTime = ROUND_TIME;
+
 void setup() {
   // Inizializza bottoni, LED e display.
   initAll();
@@ -42,14 +45,19 @@ void loop() {
         difficulty = newDifficulty;
         showDifficulty(difficulty);
       }
+
+      
+      // Check if the user pressed the button.
+      if(readButton(0)) {
+        factor = 1 - (difficulty * 0.075);  // Goes from 0.925 at difficulty 1 to 0.7 at difficulty 4.
+        changeState(PREPARE_ROUND);
+      }
       
       // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
       if (millis() - currRoundStartTime >= 10000) {
+        Serial.println("10 seconds");
         changeState(DEEP_SLEEP);
       }
-
-      // Check if the user pressed the button.
-      // ...
 
       break;
     case DEEP_SLEEP:
@@ -84,7 +92,6 @@ void loop() {
       // Volendo un animazione con i LED.
       //...
 
-      delay(2000);
       if (millis() - currRoundStartTime >= 2000) {
         // Genera un numero random.
         rand_num = generateRandomNumber();
@@ -104,7 +111,7 @@ void loop() {
 
       // Aspetta un tot di tempo, TODO: calcolare il tmepo in base alla difficoltà e al round.
       // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
-      if (millis() - currRoundStartTime >= 10000) {
+      if (millis() - currRoundStartTime >= roundTime) {
         changeState(checkWin(readLedStatesAsInt()) ? ROUND_WIN : GAME_OVER);
       }
       
@@ -116,17 +123,29 @@ void loop() {
       Serial.println("WIN");
       writeOnLCD("WIN");
 
-      // Aspetta 2 secondi.
-      delay(2000);
+      // Se sono passati 2 secondi genera un nuovo random e lo mostra
+      if (millis() - currRoundStartTime >= 2000) {
+        // Genera un numero random.
+        rand_num = generateRandomNumber();
+
+        // scrivi il numero sul display LCD.
+        writeOnLCD("" + rand_num);
+
+        // Cambia stato
+        changeState(ROUND);
+      }
 
       // Magari un animazione con i LED.
       //...
+
+      // Reduce time available time for next round.
+      roundTime = roundTime * factor;
 
       // cambia stato a ROUND. usare una funziona apposta.
       changeState(ROUND);
 
       // riduce il tempo a disposizione per il round.
-
+      //...
       break;
     case GAME_OVER:
       // Codice per lo stato GAME_OVER
