@@ -24,6 +24,7 @@ bool checkWin(int userNumber, int randomNumber)
     changeState(ROUND_WIN);
     return true;
   }
+  return false;
 }
 
 // funzione per generare un numero random.
@@ -35,11 +36,8 @@ int generateRandomNumber()
 }
 
 int checkButton(int userNumber, int ledPins[], int randomNumber) {
-     bool FLAG = true;
     // Array per tracciare lo stato dei pulsanti e dei LED
     
-
-    while (FLAG == true) {
         userNumber = 0;
 
         for (int i = 0; i < 4; i++) {
@@ -62,12 +60,21 @@ int checkButton(int userNumber, int ledPins[], int randomNumber) {
 
        if (checkWin(userNumber, randomNumber))
        {
-        FLAG = false;
+        changeState(ROUND_WIN);
        }
        
 
-        delay(50); // Piccola pausa per evitare rimbalzi (debounce)
+        delay(50); //Piccola pausa per evitare debounce
         
-    }
     return userNumber;
+}
+
+//Funzione di interrupt chiamata quando il bottone viene premuto
+void wakeUpNow() {
+  currRoundStartTime = 0;
+  changeState(STARTUP);
+}
+
+void switchToRound(){
+  changeState(PREPARE_ROUND);
 }

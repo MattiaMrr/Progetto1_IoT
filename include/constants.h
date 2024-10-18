@@ -2,13 +2,13 @@
 #define CONSTANTS_H
 
 // Definisci le costanti per i pin dei bottoni
-#define B1 12
-#define B2 11
+#define B1 2
+#define B2 3
 #define B3 10
 #define B4 9
 
 // Definisci le costanti per i pin dei LED
-#define LS 8    // PWM pin
+#define LS 8   // PWM pin
 #define L1 4
 #define L2 5
 #define L3 6

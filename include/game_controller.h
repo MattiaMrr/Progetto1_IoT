@@ -12,4 +12,6 @@ void changeState(int newState);
 int generateRandomNumber();
 bool checkWin(int user_num, int rand_num);
 int checkButton(int user_num, int ledPins[], int randomNumber);
+void wakeUpNow();
+void switchToRound();
 #endif // GAME_CONTROLLER_H

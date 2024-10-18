@@ -6,10 +6,10 @@
 #include "game_controller.h"
 #include "potentiometer_controller.h"
 
- int buttonPins[] = {B1, B2, B3, B4};
- int ledPins[] = {L1, L2, L3, L4, LS};
- int rand_num = 0;
-    int user_num;
+int buttonPins[] = {B1, B2, B3, B4};
+int ledPins[] = {L1, L2, L3, L4, LS};
+int rand_num = 0;
+int user_num;
 
 void setup() {
   // Inizializza bottoni, LED e display.
@@ -17,12 +17,8 @@ void setup() {
 
   // Inizializza il serial monitor.
   Serial.begin(9600);
-
-  // Interrupt per il wakeup dallo sleep.
-  // ...
-  
-  // Imposta lo stato iniziale.
-  changeState(STARTUP);
+  attachInterrupt(digitalPinToInterrupt(B1), wakeUpNow, FALLING);
+  attachInterrupt(digitalPinToInterrupt(B2), switchToRound, FALLING);
 
   // Resetta i led.
   resetBoard(ledPins);
@@ -33,8 +29,8 @@ void loop() {
     
     case STARTUP:
       // Pulsa il led rosso.
-     // pulseRedLed();
-
+      Serial.println("startUp");
+     pulseRedLed();
       // Read diffuculty from potentiometer.
      // int newDifficulty = readDifficulty();
 
@@ -46,43 +42,42 @@ void loop() {
       }
       */
       
-      rand_num = generateRandomNumber();
       // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
-      /*
+      
+      
       if (millis() - currRoundStartTime >= 10000) {
+        Serial.println("entrato nel if");
         changeState(DEEP_SLEEP);
-      }
-      */
+      }    
       
 
-      // Check if the user pressed the button.
-      // ...
-  state = ROUND;
+     // state = ROUND;
       break;
-    case DEEP_SLEEP:
-      Serial.println("DEEP SLEEP");
-      // forse devo spegnere tutte le luci non so se lo fa da solo.
+      case DEEP_SLEEP:
 
-      set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+      // Preparazione alla modalità sleep
+      set_sleep_mode(SLEEP_MODE_PWR_DOWN);  
       sleep_enable();
+
+      resetBoard(ledPins);
       sleep_mode();
 
-      /** The program will continue from here. **/
-      Serial.println("WAKE UP");
-
-      /* First thing to do is disable sleep. Then set state to STARTUP. */
       sleep_disable();
+
+      // Dopo il risveglio, torna allo stato STARTUP
       changeState(STARTUP);
       break;
     case PREPARE_ROUND:
-      // Codice per lo stato PREPARE_ROUND
-      // Scrivere GO sul display LCD.
-      writeOnLCD("GO");
 
+    //salvo il numero generato randomicamente nella variabile rand_num
+    rand_num = generateRandomNumber();
+    writeOnLCD("GO");
+    detachInterrupt(0);
+    detachInterrupt(1);
+   Serial.println(rand_num);
       // Volendo un animazione con i LED.
       //...
-
-      delay(2000);
+      delay(2500);
       if (millis() - currRoundStartTime >= 2000) {
         changeState(ROUND);
       }
@@ -116,8 +111,8 @@ void loop() {
       // Codice per lo stato ROUND_WIN
       
       // Scrivere WIN sul display LCD.
-      Serial.println("WIN");
-      writeOnLCD("WIN");
+      Serial.println( rand_num);
+      //writeOnLCD("WIN");
 
       // Aspetta 2 secondi.
       delay(2000);
