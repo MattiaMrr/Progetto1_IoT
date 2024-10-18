@@ -33,10 +33,11 @@ void loop() {
   switch (state) {
     case STARTUP:
       int newDifficulty;
+      interrupts();
       // Pulsa il led rosso.
       pulseRedLed();
 
-      // Read diffuculty from potentiometer.
+      // Read difficulty from potentiometer.
       newDifficulty = readDifficulty();
       Serial.print("DIFFICULTY ");
       Serial.println(newDifficulty);
@@ -46,10 +47,10 @@ void loop() {
         difficulty = newDifficulty;
         showDifficulty(difficulty);
       }
-
       
       // Check if the user pressed the button.
       if(readButton(0)) {
+        Serial.println("PORCOD");
         factor = 1 - (difficulty * 0.075);  // Goes from 0.925 at difficulty 1 to 0.7 at difficulty 4.
         changeState(PREPARE_ROUND);
       }
@@ -62,27 +63,16 @@ void loop() {
 
       break;
     case DEEP_SLEEP:
-      Serial.println("DEEP SLEEP");
-      // forse devo spegnere tutte le luci non so se lo fa da solo.
-
-      // Enable wakeup interrupts on all buttons.
       enableWakeUpInterrupts();
-
+      interrupts();
+      resetBoard();
       set_sleep_mode(SLEEP_MODE_PWR_DOWN);
       sleep_enable();
       sleep_mode();
-
-      /** The program will continue from here. **/
-      Serial.println("WAKE UP");
-
-      /* First thing to do is disable sleep. Then set state to STARTUP. */
       sleep_disable();
-
-      // Disable wakeup interrupts on all button pins.
       disableWakeUpInterrupts();
-
-      // Change state back to STARTUP.
       changeState(STARTUP);
+      noInterrupts();
       break;
     case PREPARE_ROUND:
       int rand_num;
@@ -148,6 +138,9 @@ void loop() {
       break;
     case GAME_OVER:
       // Codice per lo stato GAME_OVER
+
+      //luce rossa per un secondo
+      //...
       break;
   }
 }

@@ -1,3 +1,4 @@
+#include "HardwareSerial.h"
 #include "game_controller.h"
 #include "leds_controller.h"
 #include "buttons_controller.h"
@@ -11,6 +12,7 @@ int randomNum;
 
 void changeState(int newState)
 {
+  Serial.println("SIOCA");
   resetBoard();
   state = newState;
   currRoundStartTime = millis();

@@ -14,7 +14,7 @@ void wakeUp() {
 
 void enableWakeUpInterrupts() {
   for(int i = 0; i < BUTTON_COUNT; i++) {
-    enableInterrupt(BTN_PINS[i], wakeUp, RISING);
+    enableInterrupt(BTN_PINS[i], wakeUp, CHANGE);
   }
 }
 
