@@ -88,7 +88,7 @@ void loop() {
       int rand_num;
       // Codice per lo stato PREPARE_ROUND
       // Scrivere GO sul display LCD.
-      writeOnLCD("GO");
+      writeOnLCD("GO", "");
 
       // Volendo un animazione con i LED.
       //...
@@ -98,7 +98,7 @@ void loop() {
         rand_num = generateRandomNumber();
 
         // scrivi il numero sul display LCD.
-        writeOnLCD("" + rand_num);
+        writeOnLCD("" + rand_num, "");
 
         // Cambia stato
         changeState(ROUND);
@@ -119,28 +119,29 @@ void loop() {
       break;
     case ROUND_WIN:
       // Codice per lo stato ROUND_WIN
+
+      // Increase score.
+      score++;
       
       // Scrivere WIN sul display LCD.
-      Serial.println("WIN");
-      writeOnLCD("WIN");
+      Serial.print("GOOD! Score: ");
+      Serial.println(score);
+      writeOnLCD("GOOD!",  "Score: " + score);
+
+      delay(2000);
 
       // Se sono passati 2 secondi genera un nuovo random e lo mostra
-      if (millis() - currRoundStartTime >= 2000) {
-        // Genera un numero random.
-        rand_num = generateRandomNumber();
+      // Genera un numero random.
+      rand_num = generateRandomNumber();
 
-        // Increase score. TODO: non va qui perchè lo devo mostrare nel led nelle istruzioni sopra.
-        score++;
+      // Reduce time available time for next round.
+      roundTime = roundTime * factor;
 
-        // Reduce time available time for next round.
-        roundTime = roundTime * factor;
+      // scrivi il numero sul display LCD.
+      writeOnLCD("Number: " + rand_num, "");
 
-        // scrivi il numero sul display LCD.
-        writeOnLCD("" + rand_num);
-
-        // Cambia stato
-        changeState(ROUND);
-      }
+      // Cambia stato
+      changeState(ROUND);
 
       // Magari un animazione con i LED.
       //...
