@@ -6,6 +6,7 @@
 #include "game_controller.h"
 #include "potentiometer_controller.h"
 
+
 int buttonPins[] = {BTN1, BTN2, BTN3, BTN4};
 int ledPins[] = {L1, L2, L3, L4, LS};
 int rand_num = 0;
@@ -17,8 +18,7 @@ void setup() {
 
   // Inizializza il serial monitor.
   Serial.begin(9600);
-  attachInterrupt(digitalPinToInterrupt(BTN1), wakeUpNow, FALLING);
-  attachInterrupt(digitalPinToInterrupt(BTN2), switchToRound, FALLING);
+  enableWakeUpInterrupts();
 
   // Resetta i led.
   resetBoard(ledPins);
@@ -30,7 +30,7 @@ void loop() {
     case STARTUP:
       // Pulsa il led rosso.
       Serial.println("startUp");
-     pulseRedLed();
+      pulseRedLed();
       // Read diffuculty from potentiometer.
      // int newDifficulty = readDifficulty();
 
@@ -44,7 +44,6 @@ void loop() {
       
       // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
       
-      
       if (millis() - currRoundStartTime >= 10000) {
         Serial.println("entrato nel if");
         changeState(DEEP_SLEEP);
@@ -54,12 +53,12 @@ void loop() {
      // state = ROUND;
       break;
       case DEEP_SLEEP:
-
       // Preparazione alla modalità sleep
+      resetBoard(ledPins);
       set_sleep_mode(SLEEP_MODE_PWR_DOWN);  
       sleep_enable();
 
-      resetBoard(ledPins);
+     
       sleep_mode();
 
       sleep_disable();
@@ -72,8 +71,6 @@ void loop() {
     //salvo il numero generato randomicamente nella variabile rand_num
     rand_num = generateRandomNumber();
     writeOnLCD("GO");
-    detachInterrupt(0);
-    detachInterrupt(1);
    Serial.println(rand_num);
       // Volendo un animazione con i LED.
       //...

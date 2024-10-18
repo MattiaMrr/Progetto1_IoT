@@ -39,7 +39,7 @@ void turnOnRedLed() {
 }
 
 void turnOffRedLed() {
-    turnOnLed(LS);
+    turnOffRedLed();
 }
 
 void pulseRedLed() {

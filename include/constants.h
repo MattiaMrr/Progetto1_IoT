@@ -4,15 +4,15 @@
 // Definisci le costanti per i pin dei bottoni
 #define BTN1 2
 #define BTN2 3
-#define BTN3 10
-#define BTN4 9
+#define BTN3 4
+#define BTN4 5
 
 // Definisci le costanti per i pin dei LED
-#define LS 8   // PWM pin
-#define L1 4
-#define L2 5
-#define L3 6
-#define L4 7
+#define LS 6   // PWM pin
+#define L1 8
+#define L2 9
+#define L3 10
+#define L4 11
 
 #define POT A0
 

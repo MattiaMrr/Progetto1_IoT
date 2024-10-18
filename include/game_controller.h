@@ -14,4 +14,5 @@ bool checkWin(int user_num, int rand_num);
 int checkButton(int user_num, int ledPins[], int randomNumber);
 void wakeUpNow();
 void switchToRound();
+void enableWakeUpInterrupts();
 #endif // GAME_CONTROLLER_H

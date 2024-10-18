@@ -2,6 +2,7 @@
 #include "leds_controller.h"
 #include "buttons_controller.h"
 #include "constants.h"
+#include "EnableInterrupt.h"
 
 int state;
 int currRoundStartTime;
@@ -77,4 +78,16 @@ void wakeUpNow() {
 
 void switchToRound(){
   changeState(PREPARE_ROUND);
+}
+
+void enableWakeUpInterrupts() {
+  for(int i = 0; i < BUTTON_COUNT; i++) {
+    enableInterrupt(buttonPins[i], wakeUpNow, RISING);
+  }
+}
+
+void disableWakeUpInterrupts() {
+  for(int i = 0; i < BUTTON_COUNT; i++) {
+    disableInterrupt(buttonPins[i]);
+  }
 }

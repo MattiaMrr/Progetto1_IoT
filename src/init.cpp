@@ -6,3 +6,4 @@ void initAll(int ledPins[], int buttonPins[]) {
   initLeds(ledPins);
   initDisplay();
 }
+
