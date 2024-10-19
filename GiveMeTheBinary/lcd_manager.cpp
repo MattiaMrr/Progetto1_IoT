@@ -11,8 +11,7 @@ void initDisplay() {
   lcd.clear();
 }
 
-void writeOnLCD(const char* firstLine, const char* secondLine) {
-  lcd.clear();
+void writeOnLCD(const String firstLine, const String secondLine) {
   lcd.setCursor(0, 0);
   lcd.print(firstLine);
   Serial.print("firstLine: ");
@@ -21,5 +20,10 @@ void writeOnLCD(const char* firstLine, const char* secondLine) {
   lcd.print(secondLine);
   Serial.print("secondLine: ");
   Serial.println(secondLine);
+}
+
+
+void clearLCD() {
+  lcd.clear();
 }
 

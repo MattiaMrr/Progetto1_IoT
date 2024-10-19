@@ -28,7 +28,10 @@ bool checkWin(int guess)
 // funzione per generare un numero random.
 int generateRandomNumber()
 {
-  randomSeed(micros());
-  randomNum = rand() % 16;
+  randomNum = random() % 16;
   return randomNum;
+}
+
+void setupSeed(){
+  randomSeed(analogRead(A1));  // Usa una lettura da un pin analogico non collegato per un seme casuale
 }

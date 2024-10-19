@@ -4,6 +4,7 @@
 #include <Wire.h>
 
 void initDisplay();
-void writeOnLCD(const char* firstLine, const char* secondLine);
+void writeOnLCD(const String firstLine, const String secondLine);
+void clearLCD();
 
 #endif

@@ -18,6 +18,8 @@ void setup() {
   // Inizializza bottoni, LED e display.
   initAll();
 
+  setupSeed();
+
   // Inizializza il serial monitor.
   Serial.begin(9600);
 
@@ -37,6 +39,8 @@ void loop() {
       // Pulsa il led rosso.
       pulseRedLed();
 
+      writeOnLCD("Welcome to GMB!", "Press B1 to Start");
+
       // Read difficulty from potentiometer.
       newDifficulty = readDifficulty();
       Serial.print("DIFFICULTY ");
@@ -50,15 +54,17 @@ void loop() {
       
       // Check if the user pressed the button.
       if(readButton(0)) {
-        Serial.println("PORCOD");
+        Serial.println("btn1 premuto");
         factor = 1 - (difficulty * 0.075);  // Goes from 0.925 at difficulty 1 to 0.7 at difficulty 4.
         changeState(PREPARE_ROUND);
+        clearLCD();
       }
       
       // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
-      if (millis() - currRoundStartTime >= 10000) {
+      if (millis() - currRoundStartTime >= 20000) {
         Serial.println("10 seconds");
         changeState(DEEP_SLEEP);
+        clearLCD();
       }
 
       break;
@@ -89,10 +95,8 @@ void loop() {
         Serial.print("gen num:");
         Serial.println(rand_num);
 
-        char buffer[10]; 
-        itoa(rand_num, buffer, 10); // Converte rand_num in stringa in base 10
-        // scrivi il numero sul display LCD.
-        writeOnLCD(buffer, "");
+        clearLCD();
+        writeOnLCD("Number: ", String(rand_num));
 
         // Cambia stato
         changeState(ROUND);
@@ -118,16 +122,9 @@ void loop() {
       // Incrementa il punteggio
       score++;
       
-      // Converte il punteggio in stringa
-      char buffer[10]; 
-      itoa(score, buffer, 10); // Converte score in stringa in base 10
-      
-      // Combina la stringa "Score: " con il punteggio
-      char message[20]; // Assicurati che il buffer sia abbastanza grande
-      sprintf(message, "Score: %s", buffer); // Combina la stringa "Score: " con il contenuto di buffer
-
       // Scrive GOOD! e il punteggio sul display
-      writeOnLCD("GOOD!", message);
+      clearLCD();
+      writeOnLCD("GOOD!", String("Score: ") + String(score));
 
       delay(2000);
 
@@ -138,12 +135,9 @@ void loop() {
       roundTime = roundTime * factor;
       Serial.print("new roundtime: ");
       Serial.println(roundTime);
-
-      // Converte il numero casuale in stringa
-      itoa(rand_num, buffer, 10); // Converte rand_num in stringa in base 10
-      
       // Scrivi il numero sul display LCD
-      writeOnLCD("Number: ", buffer);
+      clearLCD();
+      writeOnLCD("Number: ", String(rand_num));
 
       // Cambia stato
       changeState(ROUND);
@@ -151,8 +145,24 @@ void loop() {
     case GAME_OVER:
       // Codice per lo stato GAME_OVER
 
-      //luce rossa per un secondo
-      //...
+      // Per il primo secondo luce rossa, poi tutto spento.
+      if (millis() - currRoundStartTime >= 1000) {
+        turnOffRedLed();
+      } else {
+        turnOnRedLed();
+      }
+
+      writeOnLCD("Game Over", String("Final Score: ") + String(score));
+
+      if (millis() - currRoundStartTime >= 10000) {
+        Serial.println("Restarting...");
+
+        score = 0;
+
+        // Cambia stato
+        changeState(STARTUP);
+      }
+
       break;
   }
 }
