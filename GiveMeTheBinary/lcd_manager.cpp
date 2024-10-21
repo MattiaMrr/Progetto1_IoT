@@ -3,14 +3,17 @@
 #include <Wire.h>
 #include <Arduino.h>
 
+// the object to access the lcd.
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
+// Initialize the display.
 void initDisplay() {
   lcd.init();
   lcd.backlight();
   lcd.clear();
 }
 
+// Function that writes on display. Arguments are first and second line to write on the lcd.
 void writeOnLCD(const String firstLine, const String secondLine) {
   lcd.setCursor(0, 0);
   lcd.print(firstLine);
@@ -22,7 +25,7 @@ void writeOnLCD(const String firstLine, const String secondLine) {
   Serial.println(secondLine);
 }
 
-
+// Clear lcd.
 void clearLCD() {
   lcd.clear();
 }

@@ -6,15 +6,17 @@
 #include "constants.h"
 #include "lcd_manager.h"
 
-int state;
-unsigned long currRoundStartTime;
+int state;  // The current state.
+unsigned long currRoundStartTime;   // The time spent in the current state.
 int difficulty = 0;
-int randomNum;
+int randomNum;  // Number to be translated.
 
-double factor;
-double roundTime = ROUND_TIME;
+double factor;  // factor used to decrease time each round.
+double roundTime = ROUND_TIME; // time available each round.
 int score = 0;
 
+// Change the game state, resetting the board and the state timer.
+// No interrupts during the change of game state.
 void changeState(const int newState)
 {
   noInterrupts();
@@ -24,20 +26,31 @@ void changeState(const int newState)
   interrupts();
 }
 
-// funzione per controllare se il round e' stato vinto
+// Check if the guess is correct.
 bool checkWin(int guess)
 {
   return guess == randomNum;
 }
 
-// funzione per generare un numero random.
+// Generate the random number from 0 to 15.
 int generateRandomNumber()
 {
   randomNum = random() % 16;
   return randomNum;
 }
 
+// Generates a random seed for random based on a read on an unused analogic pin. 
 void setupSeed(){
-  randomSeed(analogRead(A1));  // Usa una lettura da un pin analogico non collegato per un seme casuale
+  randomSeed(analogRead(A1));
+}
+
+// Sets the game difficulty.
+void setDifficulty(const int diff) {
+  difficulty = diff;
+  factor = 1 - (difficulty * 0.075);  // Goes from 0.925 at difficulty 1 to 0.7 at difficulty 4.
+}
+
+void updateRoundTime() {
+  roundTime = roundTime * factor;
 }
 

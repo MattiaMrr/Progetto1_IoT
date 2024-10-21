@@ -16,4 +16,6 @@ int generateRandomNumber();
 bool checkWin(int user_num);
 int checkButton();
 void setupSeed();
+void setDifficulty(const int diff);
+void updateRoundTime();
 #endif // GAME_CONTROLLER_H
