@@ -1,22 +1,27 @@
+#include "Arduino.h"
 #include "HardwareSerial.h"
 #include "game_controller.h"
 #include "leds_controller.h"
 #include "buttons_controller.h"
 #include "constants.h"
+#include "lcd_manager.h"
 
 int state;
 unsigned long currRoundStartTime;
 int difficulty = 0;
-int F = 1;
 int randomNum;
 
-void changeState(int newState)
+double factor;
+double roundTime = ROUND_TIME;
+int score = 0;
+
+void changeState(const int newState)
 {
-  Serial.print("Stato: ");
-  Serial.println(newState);
+  noInterrupts();
   resetBoard();
   state = newState;
   currRoundStartTime = millis();
+  interrupts();
 }
 
 // funzione per controllare se il round e' stato vinto
@@ -35,3 +40,4 @@ int generateRandomNumber()
 void setupSeed(){
   randomSeed(analogRead(A1));  // Usa una lettura da un pin analogico non collegato per un seme casuale
 }
+

@@ -4,15 +4,17 @@
 #include "leds_controller.h"
 #include "game_controller.h"
 #include "potentiometer_controller.h"
+#include "lcd_manager.h"
 
 #include <avr/sleep.h>
 
 extern const int BTN_PINS[];
 extern const int LED_PINS[];
 
-double factor;
-double roundTime = ROUND_TIME;
-int score = 0;
+extern double factor;
+extern double roundTime;
+extern int score;
+extern int state;
 
 void setup() {
   // Inizializza bottoni, LED e display.
@@ -29,7 +31,8 @@ void setup() {
   // Resetta i led.
   resetBoard();
 
-  enableInterrupt(BTN1, b1Pressed, RISING);
+
+  enableStartInterrupt();
 }
 
 
@@ -59,6 +62,7 @@ void loop() {
         Serial.println("20 seconds");
         changeState(DEEP_SLEEP);
         clearLCD();
+        disableStartInterrupt();
       }
 
       break;
@@ -72,11 +76,14 @@ void loop() {
       sleep_disable();
       disableWakeUpInterrupts();
       changeState(STARTUP);
+      enableStartInterrupt();
       noInterrupts();
       break;
     case PREPARE_ROUND:
       int rand_num;
-      // Codice per lo stato PREPARE_ROUND
+
+      disableStartInterrupt();
+
       // Scrivere GO sul display LCD.
       writeOnLCD("GO", "");
 
@@ -158,6 +165,7 @@ void loop() {
 
         // Cambia stato
         changeState(STARTUP);
+        enableStartInterrupt();
       }
 
       break;

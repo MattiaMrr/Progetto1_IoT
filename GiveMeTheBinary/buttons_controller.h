@@ -13,6 +13,7 @@ void readButtons();
 
 bool readButton(const int index);
 
+
 // Gestisce la pressione dei bottoni, chiamata dagli interrupt.
 // ...
 

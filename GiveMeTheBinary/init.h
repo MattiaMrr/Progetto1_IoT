@@ -9,5 +9,7 @@ void initAll();
 void wakeUp();
 void enableWakeUpInterrupts();
 void disableWakeUpInterrupts();
-
+void enableStartInterrupt();
+void disableStartInterrupt();
+void b1Pressed();
 #endif // INIT_H

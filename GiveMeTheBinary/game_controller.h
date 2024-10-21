@@ -7,6 +7,9 @@ extern int state;
 extern unsigned long currRoundStartTime;
 extern int difficulty;
 extern int random_number;
+extern double factor;
+extern double roundTime;
+extern int score;
 
 void changeState(int newState);
 int generateRandomNumber();
