@@ -28,6 +28,8 @@ void setup() {
 
   // Resetta i led.
   resetBoard();
+
+  enableInterrupt(BTN1, b1Pressed, RISING);
 }
 
 
@@ -43,26 +45,18 @@ void loop() {
 
       // Read difficulty from potentiometer.
       newDifficulty = readDifficulty();
-      Serial.print("DIFFICULTY ");
-      Serial.println(newDifficulty);
 
       //show selected difficulty with LEDs
       if (newDifficulty != difficulty) {
+        Serial.print("DIFFICULTY ");
+        Serial.println(newDifficulty);
         difficulty = newDifficulty;
         showDifficulty(difficulty);
       }
       
-      // Check if the user pressed the button.
-      if(readButton(0)) {
-        Serial.println("btn1 premuto");
-        factor = 1 - (difficulty * 0.075);  // Goes from 0.925 at difficulty 1 to 0.7 at difficulty 4.
-        changeState(PREPARE_ROUND);
-        clearLCD();
-      }
-      
-      // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
+      // if more than 20 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
       if (millis() - currRoundStartTime >= 20000) {
-        Serial.println("10 seconds");
+        Serial.println("20 seconds");
         changeState(DEEP_SLEEP);
         clearLCD();
       }
@@ -108,8 +102,8 @@ void loop() {
       // Controlla input utente sui bottoni.
       readButtons();
 
-      Serial.print("time in round: ");
-      Serial.println(millis() - currRoundStartTime);
+      // Serial.print("time in round: ");
+      // Serial.println(millis() - currRoundStartTime);
 
       // Aspetta un tot di tempo, TODO: calcolare il tmepo in base alla difficoltà e al round.
       // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
@@ -133,8 +127,10 @@ void loop() {
 
       // Riduci il tempo disponibile per il prossimo round
       roundTime = roundTime * factor;
-      Serial.print("new roundtime: ");
-      Serial.println(roundTime);
+
+      // Serial.print("new roundtime: ");
+      // Serial.println(roundTime);
+
       // Scrivi il numero sul display LCD
       clearLCD();
       writeOnLCD("Number: ", String(rand_num));
@@ -158,6 +154,7 @@ void loop() {
         Serial.println("Restarting...");
 
         score = 0;
+        difficulty = 0;
 
         // Cambia stato
         changeState(STARTUP);

@@ -10,6 +10,7 @@ bool ledState[LED_COUNT];
 // Used to pulse the red led.
 int fadeAmount = DEFAULT_FADE_AMOUNT;
 int currIntensity = START_INTENSITY;
+unsigned long previousMillis = 0; // Memorizza l'ultimo tempo di aggiornamento
 
 void initLeds() {
   for (int i = 0; i < LED_COUNT; i++) {
@@ -36,6 +37,14 @@ void turnOnLed(const int ledIndex) {
   Serial.println(ledIndex);
 }
 
+void changeLedStatus(const int ledIndex) {
+  if (ledState[ledIndex] == HIGH) {
+    turnOffLed(ledIndex);  // Se il LED è già acceso, lo spegne
+  } else {
+    turnOnLed(ledIndex);   // Se il LED è spento, lo accende
+  }
+}
+
 void turnOnGreenLeds() {
     for (int i = 0; i < LED_COUNT; i++) {
         turnOnLed(i);
@@ -59,24 +68,32 @@ void turnOffRedLed() {
 }
 
 void pulseRedLed() {
-    Serial.print("RED INT ");
-    Serial.println(currIntensity);
-    analogWrite(LS, currIntensity);
-    currIntensity += fadeAmount;
-    if (currIntensity == 0 || currIntensity == 255) {
-        fadeAmount = -fadeAmount;
+  unsigned long currentMillis = millis(); // Ottieni il tempo attuale
+
+    // Controlla se è trascorso l'intervallo di tempo
+    if (currentMillis - previousMillis >= 20) {
+      previousMillis = currentMillis; // Salva il tempo attuale
+      Serial.print("RED INT ");
+      Serial.println(currIntensity);
+      currIntensity += fadeAmount;
+      if (currIntensity <= 0 || currIntensity >= MAX_INTENSITY) {
+          fadeAmount = -fadeAmount;
+      } else {
+        analogWrite(LS, currIntensity);
+      }
     }
 }
-
 void resetBoard(){
     turnOffGreenLeds();
     turnOffRedLed();
 }
 
 void showDifficulty(int difficulty) {
-    resetBoard();
-    for (int i = 0; i < difficulty; i++) {
+    for (int i = 0; i < LED_COUNT; i++) {
+      if (i < difficulty)
         turnOnLed(i);
+      else
+        turnOffLed(i);
     }
 }
 

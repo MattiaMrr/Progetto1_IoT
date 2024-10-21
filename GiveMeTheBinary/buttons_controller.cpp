@@ -4,8 +4,6 @@
 #include <Arduino.h>
 
 const int BTN_PINS[BUTTON_COUNT] = {BTN1, BTN2, BTN3, BTN4};
-bool lastButtonState[4] = {HIGH, HIGH, HIGH, HIGH};
-
 
 void initButtons() {
   for (int i = 0; i < BUTTON_COUNT; i++) {
@@ -17,30 +15,31 @@ void initButtons() {
 void readButtons() {
   unsigned long currTime = millis();  // Leggi il tempo corrente
   static unsigned long btnTimers[BUTTON_COUNT] = {0, 0, 0, 0};  // Timer debounce per ogni bottone
+  static bool lastButtonState[BUTTON_COUNT] = {LOW, LOW, LOW, LOW};
 
   for (int i = 0; i < BUTTON_COUNT; i++) {
     bool btnState = digitalRead(BTN_PINS[i]);  // Leggi lo stato del bottone
 
+    Serial.print("state:");
+    Serial.println(btnState);
+    Serial.print("last state:");
+    Serial.println(lastButtonState[i]);
+
     // Se il bottone è premuto
-    if (btnState == HIGH) {
-      // Controlla se è passato abbastanza tempo dal precedente stato stabile
-      if (currTime - btnTimers[i] >= DEBOUNCE_TIME) {
-        turnOnLed(i);  // Accendi il LED corrispondente
-        // Resetta il timer.
-        btnTimers[i] = currTime;
-      }
+    if (btnState == HIGH  && btnState != lastButtonState[i] && currTime - btnTimers[i] >= DEBOUNCE_TIME) {
+      Serial.print("Debounce:");
+      Serial.println(currTime - btnTimers[i]);
+      changeLedStatus(i);  // Accendi o spegni il LED corrispondente
+      // Resetta il timer.
+      btnTimers[i] = millis();
     }
+    lastButtonState[i] = btnState;
   }
 }
 
-bool readButton(const int index){
-  unsigned long currTime = millis();  // Leggi il tempo corrente
-  static unsigned long lastPress = millis();
-  if (currTime - lastPress >= DEBOUNCE_TIME) {
-    return digitalRead(BTN_PINS[index]);
-    lastPress = currTime;
-  } else {
-    return false;
-  }
-  
+bool b1Pressed(const int index){
+  Serial.println("btn1 premuto");
+  factor = 1 - (difficulty * 0.075);  // Goes from 0.925 at difficulty 1 to 0.7 at difficulty 4.
+  changeState(PREPARE_ROUND);
+  clearLCD();
 }
