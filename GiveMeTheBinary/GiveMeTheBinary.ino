@@ -63,7 +63,7 @@ void loop() {
       if (newDifficulty != difficulty) {
         Serial.print("DIFFICULTY ");
         Serial.println(newDifficulty);
-        setDifficulty(newDifficulty)
+        setDifficulty(newDifficulty);
         showDifficulty(newDifficulty);
       }
       
@@ -175,7 +175,7 @@ void loop() {
       rand_num = generateRandomNumber();
 
       // Calculate time for the next round, it is multiplied by a factor <= 1 that reduces the time available. it depends on the diffculty.
-      updateRoundTime()
+      updateRoundTime();
 
       // Write next number on lcd.
       clearLCD();

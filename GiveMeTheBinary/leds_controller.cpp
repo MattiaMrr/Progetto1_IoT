@@ -19,7 +19,7 @@ void initLeds() {
 }
 
 // Turn off the led of the specified index.
-void turnOffLed(const int ledIndex) 
+void turnOffLed(const int ledIndex) {
   digitalWrite(LED_PINS[ledIndex], LOW);  // actual turn off.
   ledState[ledIndex] = false;             // memorize the change.
 
