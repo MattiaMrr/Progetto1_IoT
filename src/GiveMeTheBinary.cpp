@@ -7,17 +7,17 @@
 #include "game_controller.h"
 #include "potentiometer_controller.h"
 
-int buttonPins[] = {BTN4, BTN3, BTN2, BTN1};
-int ledPins[] = {L4, L3, L2, L1, LS};
+int buttonPins[] = {BTN1, BTN2, BTN3, BTN4};
+int ledPins[] = {L1, L2, L3, L4, LS};
 int rand_num;
 int user_num;
 unsigned long potentiometerValue;
 float factor = 2.3;
 float maxRoundTime = 0.0;
 int timeConversionFactor = 10000;
-float decreaseTimeFactor = 150.0;
+float decreaseTimeFactor = 200.0;
 int score = 0;
-int lowestTime = 3;
+int lowestTime = 3000;
 
 void setup()
 {
@@ -41,8 +41,6 @@ void loop()
     pulseRedLed();
     // Read diffuculty from potentiometer.
     potentiometerValue = readDifficulty();
-    Serial.println(potentiometerValue);
-    // show selected difficulty with LEDs
 
     showDifficulty(potentiometerValue, ledPins);
 
@@ -60,7 +58,6 @@ void loop()
       changeState(DEEP_SLEEP);
     }
 
-    // state = ROUND;
     break;
   case DEEP_SLEEP:
     // Preparazione alla modalità sleep
@@ -73,12 +70,11 @@ void loop()
     sleep_disable();
     disableWakeUpInterrupts();
     currRoundStartTime = millis();
-    // Dopo il risveglio, torna allo stato STARTUP
     changeState(STARTUP);
     break;
   case PREPARE_ROUND:
 
-    writeOnLCD("Go", "");
+    writeOnLCD("GO", "");
     turnOffGreenLeds(ledPins);
 
     delay(2500);
@@ -93,36 +89,42 @@ void loop()
 
     // Controlla input utente sui bottoni.
     user_num = checkButton(ledPins, rand_num);
-    Serial.println(maxRoundTime);
-
-    // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
+    // Scaduto il tempo, controlla se l'utente ha scritto corretto. Quindi cambia stato a ROUND_WIN o GAME_OVER.
     if (millis() - currRoundStartTime >= maxRoundTime)
     {
       if (checkWin(user_num, rand_num))
       {
         resetButtonsAndLeds(buttonPins, ledPins);
         turnOffGreenLeds(ledPins);
+        clearLCD();
       }
       else
+      {
+        turnOnRedLed();
+        delay(1000);
+        turnOffRedLed();
+        turnOffGreenLeds(ledPins);
         changeState(GAME_OVER);
+      }
     }
 
     break;
   case ROUND_WIN:
     // Codice per lo stato ROUND_WIN
     score++;
-    writeOnLCD("YOU WON", String("Score: ") + String(score));
+    writeOnLCD("GOOD!", String("Score: ") + String(score));
     delay(2000);
     changeState(PREPARE_ROUND);
     clearLCD();
     if (maxRoundTime >= lowestTime)
     {
-    maxRoundTime = maxRoundTime - decreaseTimeFactor;
+      maxRoundTime = maxRoundTime - decreaseTimeFactor;
     }
 
     break;
   case GAME_OVER:
-    writeOnLCD("You lost", String("Final score: " + String(score)));
+
+    writeOnLCD("GAME OVER ", String("Final Score: ") + String(score));
     break;
   }
 }

@@ -32,7 +32,6 @@ bool checkWin(int userNumber, int randomNumber)
 int generateRandomNumber()
 {
   int random_number = random() % 16;
-  Serial.println(random_number);
   return random_number;
 }
 
@@ -56,7 +55,7 @@ int checkButton(int ledPins[], int randomNumber)
   {
     if (ledState[i] == HIGH)
     {
-      userNumber |= (1 << i);
+      userNumber |= (1 << (3 - i));
     }
   }
 
