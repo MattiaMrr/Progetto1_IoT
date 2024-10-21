@@ -17,3 +17,7 @@ void writeOnLCD(const String firstLine, const String secondLine) {
     lcd.print(secondLine);
 }
 
+void clearLCD() {
+  lcd.clear();
+}
+

@@ -26,6 +26,6 @@
 
 // Definisci le dimensioni degli array
 #define BUTTON_COUNT 4
-#define LED_COUNT 5
+#define LED_COUNT 4
 
 #endif // CONSTANTS_H

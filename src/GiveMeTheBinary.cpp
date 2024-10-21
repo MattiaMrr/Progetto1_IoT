@@ -7,14 +7,21 @@
 #include "game_controller.h"
 #include "potentiometer_controller.h"
 
-
-int buttonPins[] = {BTN1, BTN2, BTN3, BTN4};
-int ledPins[] = {L1, L2, L3, L4, LS};
+int buttonPins[] = {BTN4, BTN3, BTN2, BTN1};
+int ledPins[] = {L4, L3, L2, L1, LS};
 int rand_num;
 int user_num;
+unsigned long potentiometerValue;
+float factor = 2.3;
+float maxRoundTime = 0.0;
+int timeConversionFactor = 10000;
+float decreaseTimeFactor = 150.0;
+int score = 0;
+int lowestTime = 3;
 
-void setup() {
-    Serial.begin(9600);
+void setup()
+{
+  Serial.begin(9600);
 
   // Inizializza bottoni, LED e display.
   initAll(ledPins, buttonPins);
@@ -23,112 +30,99 @@ void setup() {
   state = STARTUP;
 }
 
-void loop() {
-  switch (state) {
-    
-    case STARTUP:
-      // Pulsa il led rosso.
-      delay(10);
-      pulseRedLed();
-      // Read diffuculty from potentiometer.
-     // int newDifficulty = readDifficulty();
+void loop()
+{
+  switch (state)
+  {
 
-      //show selected difficulty with LEDs
-      /*
-      if (newDifficulty != difficulty) {
-        difficulty = newDifficulty;
-        showDifficulty(difficulty);
-      }
-      */
-      if (digitalRead(BTN1) == LOW) 
-      {
-        changeState(PREPARE_ROUND);
-      }
-      
-      if (millis() - currRoundStartTime >= 10000) {
-        turnOffRedLed();
-        changeState(DEEP_SLEEP);
-      }    
-      
+  case STARTUP:
+    // Pulsa il led rosso.
+    delay(10);
+    pulseRedLed();
+    // Read diffuculty from potentiometer.
+    potentiometerValue = readDifficulty();
+    Serial.println(potentiometerValue);
+    // show selected difficulty with LEDs
 
-     // state = ROUND;
-      break;
-      case DEEP_SLEEP:
-      // Preparazione alla modalità sleep
-      enableWakeUpInterrupts();
-      set_sleep_mode(SLEEP_MODE_PWR_DOWN);  
-      sleep_enable();
+    showDifficulty(potentiometerValue, ledPins);
 
-     
-      sleep_mode();
+    if (digitalRead(BTN1) == LOW)
+    {
+      turnOffRedLed();
+      maxRoundTime = (factor / potentiometerValue) * timeConversionFactor;
+      changeState(PREPARE_ROUND);
+    }
 
-      sleep_disable();
-      disableWakeUpInterrupts(); 
-      currRoundStartTime = millis(); 
-      // Dopo il risveglio, torna allo stato STARTUP
-      changeState(STARTUP);
-      break;
-    case PREPARE_ROUND:
+    if (millis() - currRoundStartTime >= 10000)
+    {
+      turnOffRedLed();
+      turnOffGreenLeds(ledPins);
+      changeState(DEEP_SLEEP);
+    }
+
+    // state = ROUND;
+    break;
+  case DEEP_SLEEP:
+    // Preparazione alla modalità sleep
+    enableWakeUpInterrupts();
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+
+    sleep_mode();
+
+    sleep_disable();
+    disableWakeUpInterrupts();
+    currRoundStartTime = millis();
+    // Dopo il risveglio, torna allo stato STARTUP
+    changeState(STARTUP);
+    break;
+  case PREPARE_ROUND:
 
     writeOnLCD("Go", "");
+    turnOffGreenLeds(ledPins);
 
-      delay(2500);
-      if (millis() - currRoundStartTime >= 2000) {
-       
-        rand_num = generateRandomNumber();
-        writeOnLCD("Number: ", String(rand_num));
-        changeState(ROUND);
-      }
-      break;
-    case ROUND:
-      // Codice per lo stato ROUND.
+    delay(2500);
+    if (millis() - currRoundStartTime >= 2000)
+    {
+      rand_num = generateRandomNumber();
+      writeOnLCD("Number: ", String(rand_num));
+      changeState(ROUND);
+    }
+    break;
+  case ROUND:
 
-      // Genera un numero random.
-      
-      // scrivi il numero sul display LCD.
-      //writeOnLCD();
+    // Controlla input utente sui bottoni.
+    user_num = checkButton(ledPins, rand_num);
+    Serial.println(maxRoundTime);
 
-      // Controlla input utente sui bottoni.
-      user_num = checkButton(ledPins, rand_num);
-
-      // dopo un certo tempo controlla se l'utente ha scritto corretto.
+    // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
+    if (millis() - currRoundStartTime >= maxRoundTime)
+    {
       if (checkWin(user_num, rand_num))
       {
+        resetButtonsAndLeds(buttonPins, ledPins);
         turnOffGreenLeds(ledPins);
       }
-      
-     
-      // Aspetta un tot di tempo, TODO: calcolare il tmepo in base alla difficoltà e al round.
-      
-      // checkWin();
-      // Scaduto il tempo, controlla se l'utente ha scritto corretto. in caso cambia stato a ROUND_WIN o GAME_OVER.
-      
-       if (millis() - currRoundStartTime >= 10000) {
+      else
         changeState(GAME_OVER);
-      }
-     
-      
-      break;
-    case ROUND_WIN:
-      // Codice per lo stato ROUND_WIN
-      
-     writeOnLCD("YOU WON", "");
-      //writeOnLCD("WIN");
+    }
 
-      // Aspetta 2 secondi.
-      delay(2000);
+    break;
+  case ROUND_WIN:
+    // Codice per lo stato ROUND_WIN
+    score++;
+    writeOnLCD("YOU WON", String("Score: ") + String(score));
+    delay(2000);
+    changeState(PREPARE_ROUND);
+    clearLCD();
+    if (maxRoundTime >= lowestTime)
+    {
+    maxRoundTime = maxRoundTime - decreaseTimeFactor;
+    }
 
-      // Magari un animazione con i LED.
-      //...
-
-      // cambia stato a ROUND. usare una funziona apposta.
-      changeState(PREPARE_ROUND);
-
-      // riduce il tempo a disposizione per il round.
-
-      break;
-    case GAME_OVER:
-      writeOnLCD("You lost", "");
-      break;
+    break;
+  case GAME_OVER:
+    writeOnLCD("You lost", String("Final score: " + String(score)));
+    break;
   }
 }

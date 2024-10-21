@@ -58,7 +58,8 @@ void resetBoard(int ledpins[]){
 
 
 void showDifficulty(int difficulty, int ledPins[]) {
-    for (int i = 1; i < difficulty; i++) {
+    turnOffGreenLeds(ledPins);
+    for (int i = 0; i < difficulty; i++) {
         turnOnLed(ledPins[i]);
     }
 }

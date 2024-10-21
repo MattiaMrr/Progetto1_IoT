@@ -4,6 +4,6 @@
 #include <Arduino.h>
 #include "constants.h"
 
-//int readDifficulty();
+int readDifficulty();
 
 #endif // POTENTIOMETER_CONTROLLER_H
