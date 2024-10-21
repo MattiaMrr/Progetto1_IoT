@@ -10,7 +10,10 @@ void initDisplay() {
   lcd.clear();
 }
 
-void writeOnLCD(const char* message) {
-    lcd.print(message);
+void writeOnLCD(const String firstLine, const String secondLine) {
+    lcd.setCursor(0,0);
+    lcd.print(firstLine);
+    lcd.setCursor(0,1);
+    lcd.print(secondLine);
 }
 

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "init.h"
+#include "buttons_controller.h"
 #include "constants.h"
 #include "leds_controller.h"
 #include <avr/sleep.h>
@@ -9,19 +10,17 @@
 
 int buttonPins[] = {BTN1, BTN2, BTN3, BTN4};
 int ledPins[] = {L1, L2, L3, L4, LS};
-int rand_num = 0;
+int rand_num;
 int user_num;
 
 void setup() {
+    Serial.begin(9600);
+
   // Inizializza bottoni, LED e display.
   initAll(ledPins, buttonPins);
+  setupSeed();
 
-  // Inizializza il serial monitor.
-  Serial.begin(9600);
-  enableWakeUpInterrupts();
-
-  // Resetta i led.
-  resetBoard(ledPins);
+  state = STARTUP;
 }
 
 void loop() {
@@ -29,7 +28,7 @@ void loop() {
     
     case STARTUP:
       // Pulsa il led rosso.
-      Serial.println("startUp");
+      delay(10);
       pulseRedLed();
       // Read diffuculty from potentiometer.
      // int newDifficulty = readDifficulty();
@@ -41,11 +40,13 @@ void loop() {
         showDifficulty(difficulty);
       }
       */
-      
-      // if more than 10 seconds are elasped within this state, change state to DEEP_SLEEP. Magic number to constant?
+      if (digitalRead(BTN1) == LOW) 
+      {
+        changeState(PREPARE_ROUND);
+      }
       
       if (millis() - currRoundStartTime >= 10000) {
-        Serial.println("entrato nel if");
+        turnOffRedLed();
         changeState(DEEP_SLEEP);
       }    
       
@@ -54,7 +55,7 @@ void loop() {
       break;
       case DEEP_SLEEP:
       // Preparazione alla modalità sleep
-      resetBoard(ledPins);
+      enableWakeUpInterrupts();
       set_sleep_mode(SLEEP_MODE_PWR_DOWN);  
       sleep_enable();
 
@@ -62,20 +63,20 @@ void loop() {
       sleep_mode();
 
       sleep_disable();
-
+      disableWakeUpInterrupts(); 
+      currRoundStartTime = millis(); 
       // Dopo il risveglio, torna allo stato STARTUP
       changeState(STARTUP);
       break;
     case PREPARE_ROUND:
 
-    //salvo il numero generato randomicamente nella variabile rand_num
-    rand_num = generateRandomNumber();
-    writeOnLCD("GO");
-   Serial.println(rand_num);
-      // Volendo un animazione con i LED.
-      //...
+    writeOnLCD("Go", "");
+
       delay(2500);
       if (millis() - currRoundStartTime >= 2000) {
+       
+        rand_num = generateRandomNumber();
+        writeOnLCD("Number: ", String(rand_num));
         changeState(ROUND);
       }
       break;
@@ -88,10 +89,14 @@ void loop() {
       //writeOnLCD();
 
       // Controlla input utente sui bottoni.
-      user_num = checkButton(user_num, ledPins, rand_num);
+      user_num = checkButton(ledPins, rand_num);
 
       // dopo un certo tempo controlla se l'utente ha scritto corretto.
-      checkWin(user_num, rand_num);
+      if (checkWin(user_num, rand_num))
+      {
+        turnOffGreenLeds(ledPins);
+      }
+      
      
       // Aspetta un tot di tempo, TODO: calcolare il tmepo in base alla difficoltà e al round.
       
@@ -107,8 +112,7 @@ void loop() {
     case ROUND_WIN:
       // Codice per lo stato ROUND_WIN
       
-      // Scrivere WIN sul display LCD.
-      Serial.println( rand_num);
+     writeOnLCD("YOU WON", "");
       //writeOnLCD("WIN");
 
       // Aspetta 2 secondi.
@@ -118,13 +122,13 @@ void loop() {
       //...
 
       // cambia stato a ROUND. usare una funziona apposta.
-      changeState(ROUND);
+      changeState(PREPARE_ROUND);
 
       // riduce il tempo a disposizione per il round.
 
       break;
     case GAME_OVER:
-      // Codice per lo stato GAME_OVER
+      writeOnLCD("You lost", "");
       break;
   }
 }

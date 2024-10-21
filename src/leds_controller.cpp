@@ -39,7 +39,7 @@ void turnOnRedLed() {
 }
 
 void turnOffRedLed() {
-    turnOffRedLed();
+    turnOffLed(LS);
 }
 
 void pulseRedLed() {
@@ -49,7 +49,6 @@ void pulseRedLed() {
         fadeAmount = -fadeAmount;
     }
 }
-
 
 void resetBoard(int ledpins[]){
     turnOffGreenLeds(ledpins);

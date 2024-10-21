@@ -6,3 +6,4 @@ for (int i = 0; i < 4; i++) {
         pinMode(buttonPins[i], INPUT_PULLUP);
     }
 }
+

@@ -5,11 +5,14 @@
 #include "EnableInterrupt.h"
 
 int state;
-int currRoundStartTime;
+unsigned long int currRoundStartTime;
 int difficulty = 1;
 int ledState[BUTTON_COUNT];
 int lastButtonState[BUTTON_COUNT];
 extern int buttonPins[BUTTON_COUNT];
+
+
+
 
 void changeState(int newState)
 {
@@ -31,16 +34,14 @@ bool checkWin(int userNumber, int randomNumber)
 // funzione per generare un numero random.
 int generateRandomNumber()
 {
-  randomSeed(micros());
-  int random_number = rand() % 16;
+  int random_number = random() % 16;
+  Serial.println(random_number);
   return random_number;
 }
 
-int checkButton(int userNumber, int ledPins[], int randomNumber) {
+int checkButton(int ledPins[], int randomNumber) {
     // Array per tracciare lo stato dei pulsanti e dei LED
-    
-        userNumber = 0;
-
+        int userNumber = 0;
         for (int i = 0; i < 4; i++) {
             int currentButtonState = digitalRead(buttonPins[i]);
 
@@ -61,6 +62,13 @@ int checkButton(int userNumber, int ledPins[], int randomNumber) {
 
        if (checkWin(userNumber, randomNumber))
        {
+          for (int j = 0; j < BUTTON_COUNT; j++) {
+        lastButtonState[j] = HIGH; 
+        pinMode(buttonPins[j], INPUT_PULLUP);  
+        ledState[j] = LOW; 
+
+    }
+
         changeState(ROUND_WIN);
        }
        
@@ -70,9 +78,22 @@ int checkButton(int userNumber, int ledPins[], int randomNumber) {
     return userNumber;
 }
 
+void resetButtonsAndLeds(int buttonPins[], int ledPins[]) {
+    // Resetta lo stato dei bottoni e dei LED
+    for (int i = 0; i < 4; i++) {
+        lastButtonState[i] = HIGH;  // Imposta lo stato precedente dei bottoni come non premuto
+        ledState[i] = LOW;  // Spegni i LED
+        digitalWrite(ledPins[i], LOW);  // Assicurati che i LED siano spenti
+        pinMode(buttonPins[i], INPUT_PULLUP);  // Reimposta i pulsanti come INPUT_PULLUP
+    }
+}
+
+void setupSeed() {
+  randomSeed(analogRead(A1));
+}
+
 //Funzione di interrupt chiamata quando il bottone viene premuto
 void wakeUpNow() {
-  currRoundStartTime = 0;
   changeState(STARTUP);
 }
 
