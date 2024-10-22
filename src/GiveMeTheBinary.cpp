@@ -22,11 +22,8 @@ int lowestTime = 3000;
 void setup()
 {
   Serial.begin(9600);
-
-  // Inizializza bottoni, LED e display.
   initAll(ledPins, buttonPins);
   setupSeed();
-
   state = STARTUP;
 }
 
@@ -36,18 +33,17 @@ void loop()
   {
 
   case STARTUP:
-    // Pulsa il led rosso.
     delay(10);
+    writeOnLCD("Welcome to GMB! ", String("Press B1 to Start"));
     pulseRedLed();
-    // Read diffuculty from potentiometer.
     potentiometerValue = readDifficulty();
-
     showDifficulty(potentiometerValue, ledPins);
 
     if (digitalRead(BTN1) == LOW)
     {
       turnOffRedLed();
       maxRoundTime = (factor / potentiometerValue) * timeConversionFactor;
+      clearLCD();
       changeState(PREPARE_ROUND);
     }
 
@@ -57,26 +53,23 @@ void loop()
       turnOffGreenLeds(ledPins);
       changeState(DEEP_SLEEP);
     }
-
     break;
+
   case DEEP_SLEEP:
-    // Preparazione alla modalità sleep
+    /*Preparazione alla modalità sleep*/
     enableWakeUpInterrupts();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-
     sleep_mode();
-
     sleep_disable();
     disableWakeUpInterrupts();
     currRoundStartTime = millis();
     changeState(STARTUP);
     break;
-  case PREPARE_ROUND:
 
+  case PREPARE_ROUND:
     writeOnLCD("GO", "");
     turnOffGreenLeds(ledPins);
-
     delay(2500);
     if (millis() - currRoundStartTime >= 2000)
     {
@@ -85,11 +78,10 @@ void loop()
       changeState(ROUND);
     }
     break;
-  case ROUND:
 
-    // Controlla input utente sui bottoni.
+  case ROUND:
     user_num = checkButton(ledPins, rand_num);
-    // Scaduto il tempo, controlla se l'utente ha scritto corretto. Quindi cambia stato a ROUND_WIN o GAME_OVER.
+    /*Scaduto il tempo, controlla se l'utente ha scritto corretto. Quindi cambia stato a ROUND_WIN o GAME_OVER.*/
     if (millis() - currRoundStartTime >= maxRoundTime)
     {
       if (checkWin(user_num, rand_num))
@@ -107,10 +99,10 @@ void loop()
         changeState(GAME_OVER);
       }
     }
-
     break;
+
   case ROUND_WIN:
-    // Codice per lo stato ROUND_WIN
+    /*Codice per lo stato ROUND_WIN*/
     score++;
     writeOnLCD("GOOD!", String("Score: ") + String(score));
     delay(2000);
@@ -120,8 +112,8 @@ void loop()
     {
       maxRoundTime = maxRoundTime - decreaseTimeFactor;
     }
-
     break;
+
   case GAME_OVER:
 
     writeOnLCD("GAME OVER ", String("Final Score: ") + String(score));

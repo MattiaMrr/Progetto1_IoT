@@ -17,7 +17,6 @@ void changeState(int newState)
   currRoundStartTime = millis();
 }
 
-// funzione per controllare se il round e' stato vinto
 bool checkWin(int userNumber, int randomNumber)
 {
   if (userNumber == randomNumber)
@@ -28,7 +27,6 @@ bool checkWin(int userNumber, int randomNumber)
   return false;
 }
 
-// funzione per generare un numero random.
 int generateRandomNumber()
 {
   int random_number = random() % 16;
@@ -79,7 +77,6 @@ void setupSeed()
   randomSeed(analogRead(A1));
 }
 
-// Funzione di interrupt chiamata quando il bottone viene premuto
 void wakeUpNow()
 {
   changeState(STARTUP);

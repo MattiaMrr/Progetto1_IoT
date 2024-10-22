@@ -3,8 +3,7 @@
 
 #include "constants.h"
 
-// Inizializza i bottoni
+/*Funzione che inizializza i bottoni.*/
 void buttonsInit(int buttonPins[]);
-
 
 #endif // BUTTONS_CONTROLLER_H

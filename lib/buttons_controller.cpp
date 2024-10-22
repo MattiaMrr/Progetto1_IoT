@@ -3,12 +3,13 @@
 #include "constants.h"
 #include <Arduino.h>
 
-const int buttonPins[BUTTON_COUNT] = {B1, B2, B3, B4};
+const int buttonPins[BUTTON_COUNT] = {BTN1, BTN2, BTN3, BTN4};
 bool lastButtonState[4] = {HIGH, HIGH, HIGH, HIGH};
 
-
-void initButtons() {
-  for (int i = 0; i < BUTTON_COUNT; i++) {
+void initButtons()
+{
+  for (int i = 0; i < BUTTON_COUNT; i++)
+  {
     pinMode(buttonPins[i], INPUT);
   }
 }
