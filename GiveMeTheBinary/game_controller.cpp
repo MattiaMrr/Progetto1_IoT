@@ -4,7 +4,7 @@
 #include "leds_controller.h"
 #include "buttons_controller.h"
 #include "constants.h"
-#include "lcd_manager.h"
+#include "lcd_controller.h"
 
 int state;  // The current state.
 unsigned long currRoundStartTime;   // The time spent in the current state.

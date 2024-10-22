@@ -3,7 +3,7 @@
 
 #include "leds_controller.h"
 #include "buttons_controller.h"
-#include "lcd_manager.h"
+#include "lcd_controller.h"
 
 void initAll();
 void wakeUp();

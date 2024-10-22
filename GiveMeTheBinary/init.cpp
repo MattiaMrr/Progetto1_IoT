@@ -43,6 +43,6 @@ void disableStartInterrupt(){
 // Function called by interrupt, change state to PREPARE_ROUND.
 void b1Pressed() {
   disableStartInterrupt();
-  Serial.println("btn1 premuto");
+  //Serial.println("btn1 premuto");
   changeState(PREPARE_ROUND);
 }

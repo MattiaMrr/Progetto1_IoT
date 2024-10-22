@@ -4,7 +4,7 @@
 #include "leds_controller.h"
 #include "game_controller.h"
 #include "potentiometer_controller.h"
-#include "lcd_manager.h"
+#include "lcd_controller.h"
 
 #include <avr/sleep.h>
 
@@ -19,6 +19,8 @@ extern int state;
 void setup() {
   // Initialize buttons, leds and display.
   initAll();
+
+  pinMode(A0, INPUT);
 
   // Generates a random seed for the random() function.
   setupSeed();
@@ -69,7 +71,7 @@ void loop() {
       
       // If more than 20 seconds are elapsed within this state, change state to DEEP_SLEEP. TODO: dont use magic number.
       if (millis() - currRoundStartTime >= 20000) {
-        Serial.println("20 seconds");
+        //Serial.println("20 seconds");
         // Change the state.
         changeState(DEEP_SLEEP);
         // Clears the LCD.
@@ -131,8 +133,8 @@ void loop() {
       // Generate random number.
       rand_num = generateRandomNumber();
 
-      Serial.print("gen num:");
-      Serial.println(rand_num);
+      //Serial.print("gen num:");
+      //Serial.println(rand_num);
 
       // Write the random number on the lcd.
       clearLCD();
@@ -151,8 +153,8 @@ void loop() {
       // Read user input on the buttons.
       readButtons();
 
-      // Serial.print("time in round: ");
-      // Serial.println(millis() - currRoundStartTime);
+      // //Serial.print("time in round: ");
+      // //Serial.println(millis() - currRoundStartTime);
 
       // After a certain time check the guess and change state.
       if (millis() - currRoundStartTime >= roundTime) {
@@ -205,7 +207,7 @@ void loop() {
 
       // After 10 seconds start over.
       if (millis() - currRoundStartTime >= 10000) {
-        Serial.println("Restarting...");
+        //Serial.println("Restarting...");
 
         // Reset score and difficulty.
         score = 0;

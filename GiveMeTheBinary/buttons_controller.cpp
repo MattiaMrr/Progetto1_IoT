@@ -23,8 +23,8 @@ void readButtons() {
 
     // If button is pressed and debounce time has passed and the button state has changed (button not held down) turn on correspoding led.
     if (btnState == HIGH  && btnState != lastButtonState[i] && currTime - btnTimers[i] >= DEBOUNCE_TIME) {
-      // Serial.print("Debounce:");
-      // Serial.println(currTime - btnTimers[i]);
+      // //Serial.print("Debounce:");
+      // //Serial.println(currTime - btnTimers[i]);
       changeLedStatus(i);  // Turn on/off correspodning led.
       // Reset button timer.
       btnTimers[i] = millis();
