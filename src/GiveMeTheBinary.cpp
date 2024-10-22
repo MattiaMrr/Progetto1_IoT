@@ -99,6 +99,7 @@ void loop()
         delay(1000);
         turnOffRedLed();
         turnOffGreenLeds(ledPins);
+        resetButtonsAndLeds(buttonPins, ledPins);
         changeState(GAME_OVER);
       }
     }
