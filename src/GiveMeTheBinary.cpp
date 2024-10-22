@@ -33,9 +33,12 @@ void loop()
   {
 
   case STARTUP:
-    delay(10);
+    if (millis() - currRoundStartTime >= 100)
+    {
+      pulseRedLed();
+    }
     writeOnLCD("Welcome to GMB! ", String("Press B1 to Start"));
-    pulseRedLed();
+
     potentiometerValue = readDifficulty();
     showDifficulty(potentiometerValue, ledPins);
 
@@ -53,6 +56,7 @@ void loop()
       turnOffGreenLeds(ledPins);
       changeState(DEEP_SLEEP);
     }
+
     break;
 
   case DEEP_SLEEP:
@@ -70,7 +74,6 @@ void loop()
   case PREPARE_ROUND:
     writeOnLCD("GO", "");
     turnOffGreenLeds(ledPins);
-    delay(2500);
     if (millis() - currRoundStartTime >= 2000)
     {
       rand_num = generateRandomNumber();
@@ -117,6 +120,12 @@ void loop()
   case GAME_OVER:
 
     writeOnLCD("GAME OVER ", String("Final Score: ") + String(score));
+    if (millis() - currRoundStartTime >= 10000)
+    {
+      changeState(STARTUP);
+      score = 0;
+    }
+
     break;
   }
 }

@@ -3,7 +3,7 @@
 
 #include "constants.h"
 
-#define DEFAULT_FADE_AMOUNT 5
+#define DEFAULT_FADE_AMOUNT 17
 #define START_INTENSITY 0
 
 /*Funzione che inizializza i led.*/
