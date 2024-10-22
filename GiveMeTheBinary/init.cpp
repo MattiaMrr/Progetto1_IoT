@@ -45,5 +45,4 @@ void b1Pressed() {
   disableStartInterrupt();
   Serial.println("btn1 premuto");
   changeState(PREPARE_ROUND);
-  clearLCD();
 }

@@ -7,4 +7,7 @@ void initDisplay();
 void writeOnLCD(const String firstLine, const String secondLine);
 void clearLCD();
 
+void turnOffLCD();
+void turnOnLCD();
+
 #endif

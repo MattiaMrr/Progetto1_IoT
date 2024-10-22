@@ -51,28 +51,28 @@ void changeLedStatus(const int ledIndex) {
 
 // turn on all green leds.
 void turnOnGreenLeds() {
-    for (int i = 0; i < LED_COUNT; i++) {
-        turnOnLed(i);
-    }
+  for (int i = 0; i < LED_COUNT; i++) {
+      turnOnLed(i);
+  }
 }
 
 // turn off all green leds.
 void turnOffGreenLeds() {
-    for (int i = 0; i < LED_COUNT; i++) {
-        turnOffLed(i);
-    }
+  for (int i = 0; i < LED_COUNT; i++) {
+      turnOffLed(i);
+  }
 }
 
 // turn on red led
 void turnOnRedLed() {
-    digitalWrite(LS, HIGH);
-    Serial.println("RED ON");
+  digitalWrite(LS, HIGH);
+  Serial.println("RED ON");
 }
 
 // turn off red led
 void turnOffRedLed() {
-    digitalWrite(LS, LOW);
-    Serial.println("RED OFF");
+  digitalWrite(LS, LOW);
+  Serial.println("RED OFF");
 }
 
 // Pulse the red led, updated every 20 milliseconds.
@@ -100,8 +100,8 @@ void pulseRedLed() {
 
 // Turn all leds off.
 void resetBoard(){
-    turnOffGreenLeds();
-    turnOffRedLed();
+  turnOffGreenLeds();
+  turnOffRedLed();
 }
 
 // Take a value from 1 to 4 and show it on the leds.

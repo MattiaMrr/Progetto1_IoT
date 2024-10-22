@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 // the object to access the lcd.
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 // Initialize the display.
 void initDisplay() {
@@ -28,5 +28,14 @@ void writeOnLCD(const String firstLine, const String secondLine) {
 // Clear lcd.
 void clearLCD() {
   lcd.clear();
+}
+
+void turnOffLCD() {
+  lcd.noBacklight();
+  lcd.off();
+}
+void turnOnLCD() {
+  lcd.on();
+  lcd.backlight();
 }
 

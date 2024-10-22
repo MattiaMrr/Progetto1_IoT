@@ -89,6 +89,7 @@ void loop() {
       interrupts();
       // Turn off the leds before going to sleep.
       resetBoard();
+      turnOffLCD();
       // Code to go to sleep.
       set_sleep_mode(SLEEP_MODE_PWR_DOWN);
       sleep_enable();
@@ -98,6 +99,8 @@ void loop() {
       // And then disable the interrupts for the wakeup.
       disableWakeUpInterrupts();
       // Finally change state back to STARTUP.
+      turnOnLCD();
+      difficulty = 0;
       changeState(STARTUP);
       // Also enable the interrupt to switch to PREPARE_ROUND since it was disabled before the deep sleep.
       enableStartInterrupt();
@@ -115,8 +118,10 @@ void loop() {
       // Disable the interrupt that got us here, not needed anymore.
       disableStartInterrupt();
 
+      clearLCD();
+
       // Write GO on the lcd.
-      writeOnLCD("GO", "");
+      writeOnLCD("GO!!!", "");
 
       // LED animation??
       //...
